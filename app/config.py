@@ -17,5 +17,3 @@ elif DATABASE_URL.startswith("postgresql://") and "+psycopg" not in DATABASE_URL
 BASE_URL = os.environ.get("BASE_URL", "http://localhost:8000")
 ADSENSE_CLIENT_ID = os.environ.get("ADSENSE_CLIENT_ID", "")
 ADSENSE_SLOT_ID = os.environ.get("ADSENSE_SLOT_ID", "")
-
-CRAWL_MONTHS_AHEAD = int(os.environ.get("CRAWL_MONTHS_AHEAD", "4"))

@@ -1,6 +1,9 @@
-"""Cron entry point: re-crawl every active school and refresh its future events.
+"""Cron entry point: 모든 학교를 재크롤링하고 미래 학사일정을 갱신.
 
-Run with `python -m app.tasks.update_schools`.
+Run: ``python -m app.tasks.update_schools [--slug gachon]``
+
+각 크롤러가 학교 사이트 구조에 맞는 horizon으로 알아서 받아온다
+(가천대 12개월 month-by-month, 동서울대 학년도 단위 등).
 """
 from __future__ import annotations
 
@@ -10,7 +13,6 @@ import sys
 
 from sqlalchemy import delete, select
 
-from app.config import CRAWL_MONTHS_AHEAD
 from app.crawlers import get_crawler
 from app.db import session_scope
 from app.models import Event, School
@@ -22,15 +24,15 @@ logging.basicConfig(
 log = logging.getLogger("update_schools")
 
 
-def update_school(session, school: School, months_ahead: int) -> int:
+def update_school(session, school: School) -> int:
     crawler = get_crawler(school.crawler_key)
     log.info("crawling %s (key=%s)", school.slug, school.crawler_key)
-    raw_events = list(crawler.fetch(months_ahead))
+    raw_events = list(crawler.fetch())
     log.info("  fetched %d events", len(raw_events))
 
-    # Crawled snapshot is authoritative — wipe and reinsert. Schools sometimes
-    # edit past entries (typo fixes, period extensions) and re-crawling is
-    # cheap, so we don't try to preserve old rows.
+    # 크롤링 결과가 단일 source of truth — 전체 삭제 후 재삽입.
+    # 학교 사이트가 가끔 과거 일정을 수정 (오타, 기간 연장)하고
+    # 재크롤링이 싸므로 row 보존을 시도하지 않는다.
     session.execute(delete(Event).where(Event.school_id == school.id))
 
     inserted = 0
@@ -55,7 +57,7 @@ def update_school(session, school: School, months_ahead: int) -> int:
     return inserted
 
 
-def main(only_slug: str | None = None, months_ahead: int = CRAWL_MONTHS_AHEAD) -> int:
+def main(only_slug: str | None = None) -> int:
     with session_scope() as session:
         stmt = select(School)
         if only_slug:
@@ -69,7 +71,7 @@ def main(only_slug: str | None = None, months_ahead: int = CRAWL_MONTHS_AHEAD) -
         total = 0
         for school in schools:
             try:
-                total += update_school(session, school, months_ahead)
+                total += update_school(session, school)
             except Exception:
                 log.exception("failed to update school %s", school.slug)
 
@@ -80,6 +82,5 @@ def main(only_slug: str | None = None, months_ahead: int = CRAWL_MONTHS_AHEAD) -
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--slug", help="update only this school slug")
-    parser.add_argument("--months", type=int, default=CRAWL_MONTHS_AHEAD)
     args = parser.parse_args()
-    sys.exit(0 if main(args.slug, args.months) >= 0 else 1)
+    sys.exit(0 if main(args.slug) >= 0 else 1)
