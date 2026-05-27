@@ -2,11 +2,13 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "campus-ical",
   "compatibility_date": "2026-05-27",
+  "main": "worker/index.ts",
   "observability": {
     "enabled": true
   },
   "assets": {
-    "directory": "docs"
+    "directory": "docs",
+    "binding": "ASSETS"
   },
   "compatibility_flags": [
     "nodejs_compat"
