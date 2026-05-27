@@ -14,13 +14,17 @@ def _uid(school_slug: str, ev: EventModel) -> str:
     return f"{sha1(raw.encode('utf-8')).hexdigest()}@ical-db"
 
 
-def build_calendar(school: School, events: Iterable[EventModel]) -> bytes:
+def build_calendar(
+    school: School,
+    events: Iterable[EventModel],
+    calendar_name: str | None = None,
+) -> bytes:
     cal = Calendar()
     cal.add("prodid", f"-//ical-db//{school.slug}//KR")
     cal.add("version", "2.0")
     cal.add("calscale", "GREGORIAN")
     cal.add("method", "PUBLISH")
-    cal.add("x-wr-calname", f"{school.name} 학사일정")
+    cal.add("x-wr-calname", f"{calendar_name or school.name} 학사일정")
     cal.add("x-wr-timezone", school.timezone)
 
     now = datetime.now(timezone.utc)

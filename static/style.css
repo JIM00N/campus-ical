@@ -79,6 +79,71 @@ body {
 .school-logo { width: 96px; height: 96px; object-fit: contain; margin: 0 auto 16px; display: block; }
 .school-detail h1 { margin: 0 0 24px; font-size: 26px; }
 
+.filter-toggle {
+    display: inline-flex;
+    background: #f3f4f6;
+    padding: 4px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    gap: 2px;
+}
+.filter-switch {
+    cursor: pointer;
+}
+.filter-switch input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+.filter-switch span {
+    display: inline-block;
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #6b7280;
+    transition: background 0.15s, color 0.15s;
+}
+.filter-switch input:checked + span {
+    background: white;
+    color: #111827;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+.category-chip {
+    cursor: pointer;
+}
+.category-chip input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+.category-chip span {
+    display: inline-block;
+    padding: 8px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 999px;
+    font-size: 13px;
+    color: #4b5563;
+    background: white;
+    transition: all 0.15s;
+}
+.category-chip input:checked + span {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: white;
+}
+.category-chip:hover span {
+    border-color: #9ca3af;
+}
+
 .url-box {
     display: flex;
     gap: 8px;
