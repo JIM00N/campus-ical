@@ -11,3 +11,5 @@ ops/mac-cron/.env
 .DS_Store
 .idea/
 .vscode/
+memo.txt
+supabase/.temp/
