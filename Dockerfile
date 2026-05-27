@@ -24,4 +24,5 @@ ENV PORT=8000
 EXPOSE 8000
 
 ENTRYPOINT ["/usr/bin/tini", "--"]
-CMD ["sh", "-c", "python -m scripts.seed_schools && uvicorn app.main:app --host 0.0.0.0 --port ${PORT}"]
+# Fallback to 8000 if PORT isn't injected; exec lets signals reach uvicorn.
+CMD ["sh", "-c", "echo \"starting on PORT=${PORT:-8000}\" && python -m scripts.seed_schools && exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
