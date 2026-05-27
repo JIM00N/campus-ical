@@ -10,6 +10,7 @@ SSLContext로는 handshake 실패. selenium의 brower 엔진이 자체 TLS stack
 """
 from __future__ import annotations
 
+import os
 import re
 from contextlib import contextmanager
 from datetime import date, timedelta
@@ -17,6 +18,7 @@ from typing import Iterable
 
 from selenium.webdriver import Firefox, FirefoxOptions
 from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.service import Service as FirefoxService
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -34,7 +36,18 @@ def _firefox():
     opts = FirefoxOptions()
     opts.add_argument("-headless")
     opts.set_preference("intl.accept_languages", "ko-KR,ko")
-    driver = Firefox(options=opts)
+
+    # Selenium Manager can't provision a driver on linux/aarch64. When the
+    # image supplies explicit binary paths (see Dockerfile), use them so
+    # Selenium skips Selenium Manager. Absent the env vars (amd64 / local dev),
+    # fall back to the default path where Selenium Manager handles provisioning.
+    firefox_bin = os.environ.get("FIREFOX_BIN")
+    if firefox_bin:
+        opts.binary_location = firefox_bin
+    geckodriver_bin = os.environ.get("GECKODRIVER_BIN")
+    service = FirefoxService(executable_path=geckodriver_bin) if geckodriver_bin else None
+
+    driver = Firefox(options=opts, service=service)
     driver.set_page_load_timeout(30)
     try:
         yield driver
