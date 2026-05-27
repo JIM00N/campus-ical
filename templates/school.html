@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}{{ school.name }} 학사일정 구독{% endblock %}
+{% block content %}
+<section class="school-detail">
+    {% if school.logo_path %}
+    <img class="school-logo" src="{{ school.logo_path }}" alt="{{ school.name }}">
+    {% else %}
+    <div class="school-logo logo-fallback">{{ school.name[0] }}</div>
+    {% endif %}
+
+    <h1>{{ school.name }} 학사일정</h1>
+
+    <div class="url-box">
+        <input id="icalUrl" type="text" readonly value="{{ ical_url }}">
+        <button id="copyBtn" type="button">URL 복사</button>
+    </div>
+    <p id="copyStatus" class="copy-status"></p>
+
+    <a class="subscribe-btn" href="{{ webcal_url }}">캘린더 앱으로 바로 추가</a>
+
+    <details class="how">
+        <summary>캘린더 앱에 등록하는 방법</summary>
+        <ol>
+            <li><strong>Google 캘린더</strong>: 좌측 “다른 캘린더” → “URL로 추가” → 위 URL 붙여넣기</li>
+            <li><strong>Apple 캘린더 (iPhone/Mac)</strong>: “캘린더 추가” → “구독 캘린더 추가” → 위 URL 붙여넣기</li>
+            <li><strong>Outlook</strong>: 캘린더 → “캘린더 추가” → “웹에서 구독” → 위 URL 붙여넣기</li>
+        </ol>
+    </details>
+</section>
+
+<script>
+document.getElementById('copyBtn').addEventListener('click', async () => {
+    const input = document.getElementById('icalUrl');
+    const status = document.getElementById('copyStatus');
+    try {
+        await navigator.clipboard.writeText(input.value);
+        status.textContent = '✓ URL이 복사되었습니다';
+        status.className = 'copy-status ok';
+    } catch (err) {
+        input.select();
+        document.execCommand('copy');
+        status.textContent = '✓ URL이 복사되었습니다';
+        status.className = 'copy-status ok';
+    }
+});
+</script>
+{% endblock %}
