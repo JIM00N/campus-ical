@@ -1,3 +1,13 @@
+"""가천대학교 학사일정 크롤러.
+
+가천대 학사일정 페이지는 ``?year=Y&month=M``로 월 단위 calendar view만
+노출한다 (학년도/list view 같은 합본 endpoint 없음). 그래서 미래 12개월을
+month-by-month로 selenium fetch 한다.
+
+SSL: 가천대 서버는 약한 cipher만 허용해 Python urllib/requests 기본
+SSLContext로는 handshake 실패. selenium의 brower 엔진이 자체 TLS stack
+으로 우회한다 (별도 LegacyTLSAdapter 불필요).
+"""
 from __future__ import annotations
 
 import re
@@ -16,6 +26,7 @@ from app.crawlers.registry import register_crawler
 BASE_URL = "https://www.gachon.ac.kr/kor/1075/subview.do"
 PERIOD_RE = re.compile(r"(\d{1,2})\.(\d{1,2})(?:\s*~\s*(\d{1,2})\.(\d{1,2}))?")
 TABLE_SELECTOR = ".sche-comt tbody"
+HORIZON_MONTHS = 12  # today부터 미래 12개월치 (학년도 1년 + 직전 학기 일부)
 
 
 @contextmanager
@@ -35,14 +46,16 @@ def _firefox():
 class GachonCrawler(BaseCrawler):
     key = "gachon"
 
-    def fetch(self, months_ahead: int) -> Iterable[RawEvent]:
+    def fetch(self) -> Iterable[RawEvent]:
         today = date.today()
         seen: set[tuple[str, date, date]] = set()
         year, month = today.year, today.month
 
         with _firefox() as driver:
-            for _ in range(months_ahead):
+            for _ in range(HORIZON_MONTHS):
                 for ev in self._fetch_month(driver, year, month):
+                    if ev.dtstart < today:
+                        continue
                     identity = (ev.summary, ev.dtstart, ev.dtend)
                     if identity in seen:
                         continue
@@ -74,8 +87,8 @@ class GachonCrawler(BaseCrawler):
             if not parsed:
                 continue
             dtstart, dtend = parsed
-            # Only keep rows whose start month matches the page month.
-            # Other months on the same page are duplicates from neighboring pages.
+            # 한 월 페이지에 인접 월의 일정도 보일 수 있는데, 다음 page에서
+            # 다시 yield되므로 여기서는 시작 월이 page 월과 같은 것만 채택.
             if dtstart.month != month:
                 continue
             events.append(RawEvent(summary=summary, dtstart=dtstart, dtend=dtend))
