@@ -22,8 +22,17 @@ const ADS = {
 
 const SCHOOL_COLS = "id, slug, name, name_en, logo_path, website, timezone";
 
+// BOM(0xEF 0xBB 0xBF)을 body 첫 byte로 박아야 macOS Safari/Chrome이 응답을
+// 한국어 encoding으로 자동 추론하지 않음 (Content-Type charset=utf-8만으로는 부족).
+const BOM = "﻿";
 const htmlResp = (body: string, status = 200) =>
-  new Response(body, { status, headers: { "Content-Type": "text/html; charset=utf-8" } });
+  new Response(BOM + body, {
+    status,
+    headers: {
+      "Content-Type": "text/html; charset=utf-8",
+      "X-Content-Type-Options": "nosniff",
+    },
+  });
 const jsonResp = (data: unknown, status = 200) =>
   new Response(JSON.stringify(data), { status, headers: { "Content-Type": "application/json" } });
 const notFound = (msg = "Not Found") => htmlResp(`<h1>${msg}</h1>`, 404);
