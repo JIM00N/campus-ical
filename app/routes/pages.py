@@ -4,6 +4,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.categories import CATEGORIES
 from app.config import ADSENSE_CLIENT_ID, ADSENSE_SLOT_ID, BASE_URL
 from app.db import get_session
 from app.models import School
@@ -45,6 +46,7 @@ def school_page(slug: str, request: Request, session: Session = Depends(get_sess
             "school": school,
             "ical_url": ical_url,
             "webcal_url": webcal_url,
+            "categories": CATEGORIES,
             **_ads_context(),
         },
     )

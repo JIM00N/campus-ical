@@ -10,13 +10,33 @@
 
     <h1>{{ school.name }} 학사일정</h1>
 
+    <div class="filter-toggle">
+        <label class="filter-switch">
+            <input type="radio" name="mode" value="all" checked>
+            <span>전체 받기</span>
+        </label>
+        <label class="filter-switch">
+            <input type="radio" name="mode" value="pick">
+            <span>골라 받기</span>
+        </label>
+    </div>
+
+    <div class="categories" hidden>
+        {% for cat in categories %}
+        <label class="category-chip">
+            <input type="checkbox" data-cat value="{{ cat.slug }}">
+            <span>{{ cat.label }}</span>
+        </label>
+        {% endfor %}
+    </div>
+
     <div class="url-box">
         <input id="icalUrl" type="text" readonly value="{{ ical_url }}">
         <button id="copyBtn" type="button">URL 복사</button>
     </div>
     <p id="copyStatus" class="copy-status"></p>
 
-    <a class="subscribe-btn" href="{{ webcal_url }}">캘린더 앱으로 바로 추가</a>
+    <a id="subscribeBtn" class="subscribe-btn" href="{{ webcal_url }}">캘린더 앱으로 바로 추가</a>
 
     <details class="how">
         <summary>캘린더 앱에 등록하는 방법</summary>
@@ -29,19 +49,45 @@
 </section>
 
 <script>
-document.getElementById('copyBtn').addEventListener('click', async () => {
-    const input = document.getElementById('icalUrl');
-    const status = document.getElementById('copyStatus');
-    try {
-        await navigator.clipboard.writeText(input.value);
-        status.textContent = '✓ URL이 복사되었습니다';
-        status.className = 'copy-status ok';
-    } catch (err) {
-        input.select();
-        document.execCommand('copy');
-        status.textContent = '✓ URL이 복사되었습니다';
-        status.className = 'copy-status ok';
+(function () {
+    const baseUrl = {{ ical_url|tojson }};
+    const icalInput = document.getElementById('icalUrl');
+    const subscribeBtn = document.getElementById('subscribeBtn');
+    const categoriesBox = document.querySelector('.categories');
+    const modeRadios = document.querySelectorAll('input[name="mode"]');
+    const catBoxes = document.querySelectorAll('input[data-cat]');
+
+    function selectedCats() {
+        return [...catBoxes].filter(c => c.checked).map(c => c.value);
     }
-});
+
+    function refresh() {
+        const mode = document.querySelector('input[name="mode"]:checked').value;
+        categoriesBox.hidden = mode !== 'pick';
+
+        let url = baseUrl;
+        if (mode === 'pick') {
+            const cats = selectedCats();
+            if (cats.length) url = `${baseUrl}?categories=${cats.join(',')}`;
+        }
+        icalInput.value = url;
+        subscribeBtn.href = url.replace(/^https?/, 'webcal');
+    }
+
+    modeRadios.forEach(r => r.addEventListener('change', refresh));
+    catBoxes.forEach(c => c.addEventListener('change', refresh));
+
+    document.getElementById('copyBtn').addEventListener('click', async () => {
+        const status = document.getElementById('copyStatus');
+        try {
+            await navigator.clipboard.writeText(icalInput.value);
+        } catch (err) {
+            icalInput.select();
+            document.execCommand('copy');
+        }
+        status.textContent = '✓ URL이 복사되었습니다';
+        status.className = 'copy-status ok';
+    });
+})();
 </script>
 {% endblock %}
