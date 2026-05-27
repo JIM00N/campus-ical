@@ -1,0 +1,17 @@
+__pycache__
+*.pyc
+*.pyo
+venv/
+.venv/
+.env
+.env.local
+*.db
+*.sqlite
+.git
+.idea
+.vscode
+.DS_Store
+ical/
+Gachon_Calender.ics/
+db_updater.py
+memo.txt
