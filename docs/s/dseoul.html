@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>동서울대학교 학사일정 구독</title>
+<meta name="description" content="동서울대학교 학사일정을 개인 캘린더 앱에서 자동으로 받아볼 수 있는 iCal 구독 서비스">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<header class="topbar"><a href="../" class="brand">학사일정 구독</a></header>
+<aside class="side-ad side-ad--left"><div class="ad-placeholder ad-placeholder--vertical"><span>광고 영역<br>(160 × 600)</span></div></aside>
+<aside class="side-ad side-ad--right"><div class="ad-placeholder ad-placeholder--vertical"><span>광고 영역<br>(160 × 600)</span></div></aside>
+<main class="main">
+<section class="school-detail">
+<img class="school-logo" src="https://cdn.jsdelivr.net/gh/JIM00N/campus-ical@main/static/logos/dseoul-official.svg" alt="동서울대학교">
+<h1>동서울대학교 학사일정</h1>
+
+<div class="filter-toggle">
+<label class="filter-switch"><input type="radio" name="mode" value="all" checked><span>전체 받기</span></label>
+<label class="filter-switch"><input type="radio" name="mode" value="pick"><span>골라 받기</span></label>
+</div>
+
+<div class="categories disabled">
+<label class="category-chip"><input type="checkbox" data-cat value="tuition" disabled><span>등록금</span></label>
+<label class="category-chip"><input type="checkbox" data-cat value="registration" disabled><span>수강신청</span></label>
+<label class="category-chip"><input type="checkbox" data-cat value="exam" disabled><span>시험</span></label>
+<label class="category-chip"><input type="checkbox" data-cat value="major-change" disabled><span>전과·부복수전공</span></label>
+<label class="category-chip"><input type="checkbox" data-cat value="leave" disabled><span>휴학·복학</span></label>
+<label class="category-chip"><input type="checkbox" data-cat value="summer" disabled><span>계절학기</span></label>
+<label class="category-chip"><input type="checkbox" data-cat value="withdrawal" disabled><span>자퇴</span></label>
+<label class="category-chip"><input type="checkbox" data-cat value="graduation" disabled><span>학위수여식</span></label>
+</div>
+
+<div class="url-box">
+<input id="icalUrl" type="text" readonly value="https://rhjovcmtvzhqublrqxic.supabase.co/functions/v1/web/calendar/dseoul.ics">
+<button id="copyBtn" type="button">URL 복사</button>
+</div>
+<p id="copyStatus" class="copy-status"></p>
+
+<a id="subscribeBtn" class="subscribe-btn" href="webcal://rhjovcmtvzhqublrqxic.supabase.co/functions/v1/web/calendar/dseoul.ics">캘린더 앱으로 바로 추가</a>
+
+<details class="how">
+<summary>캘린더 앱에 등록하는 방법</summary>
+<ol>
+<li><strong>Google 캘린더</strong>: 좌측 "다른 캘린더" → "URL로 추가" → 위 URL 붙여넣기</li>
+<li><strong>Apple 캘린더 (iPhone/Mac)</strong>: "캘린더 추가" → "구독 캘린더 추가" → 위 URL 붙여넣기</li>
+<li><strong>Outlook</strong>: 캘린더 → "캘린더 추가" → "웹에서 구독" → 위 URL 붙여넣기</li>
+</ol>
+</details>
+</section>
+</main>
+<aside class="ad-slot ad-placeholder"><span>광고 영역 (Google AdSense)</span></aside>
+<footer class="footer"><p>학사일정은 각 학교 공식 사이트에서 매일 자동으로 동기화됩니다. 일정이 변경되면 캘린더에도 반영됩니다.</p></footer>
+
+<script src="../subscribe.js"></script>
+</body>
+</html>
