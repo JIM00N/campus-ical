@@ -1,0 +1,9 @@
+# Supabase project config. branch deploy / GitHub integration이 이 파일을 보고
+# 어떤 Edge Function을 배포할지 결정한다. 선언 안 된 함수는 deploy 안 됨.
+
+project_id = "rhjovcmtvzhqublrqxic"
+
+# web: iCal feed endpoint (학교 학사일정을 .ics로 응답).
+# anon 접근 (캘린더 앱이 토큰 없이 fetch).
+[functions.web]
+verify_jwt = false
