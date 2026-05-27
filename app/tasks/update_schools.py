@@ -7,7 +7,6 @@ from __future__ import annotations
 import argparse
 import logging
 import sys
-from datetime import date
 
 from sqlalchemy import delete, select
 
@@ -29,13 +28,13 @@ def update_school(session, school: School, months_ahead: int) -> int:
     raw_events = list(crawler.fetch(months_ahead))
     log.info("  fetched %d events", len(raw_events))
 
-    # Replace future events to reflect any schedule edits upstream.
-    session.execute(
-        delete(Event).where(Event.school_id == school.id, Event.dtstart >= date.today())
-    )
+    # Crawled snapshot is authoritative — wipe and reinsert. Schools sometimes
+    # edit past entries (typo fixes, period extensions) and re-crawling is
+    # cheap, so we don't try to preserve old rows.
+    session.execute(delete(Event).where(Event.school_id == school.id))
 
     inserted = 0
-    seen: set[tuple[str, date, date]] = set()
+    seen: set[tuple] = set()
     for ev in raw_events:
         key = (ev.summary, ev.dtstart, ev.dtend)
         if key in seen:

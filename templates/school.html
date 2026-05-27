@@ -21,10 +21,10 @@
         </label>
     </div>
 
-    <div class="categories" hidden>
+    <div class="categories disabled">
         {% for cat in categories %}
         <label class="category-chip">
-            <input type="checkbox" data-cat value="{{ cat.slug }}">
+            <input type="checkbox" data-cat value="{{ cat.slug }}" disabled>
             <span>{{ cat.label }}</span>
         </label>
         {% endfor %}
@@ -63,10 +63,15 @@
 
     function refresh() {
         const mode = document.querySelector('input[name="mode"]:checked').value;
-        categoriesBox.hidden = mode !== 'pick';
+        const disabled = mode !== 'pick';
+        categoriesBox.classList.toggle('disabled', disabled);
+        catBoxes.forEach(c => {
+            c.disabled = disabled;
+            if (disabled) c.checked = false;
+        });
 
         let url = baseUrl;
-        if (mode === 'pick') {
+        if (!disabled) {
             const cats = selectedCats();
             if (cats.length) url = `${baseUrl}?categories=${cats.join(',')}`;
         }

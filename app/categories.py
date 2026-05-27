@@ -20,10 +20,10 @@ class Category:
 CATEGORIES: tuple[Category, ...] = (
     Category("tuition",      "등록금",          ("등록금",)),
     Category("registration", "수강신청",        ("수강신청", "예비수강")),
-    Category("exam",         "시험",            ("중간고사", "기말고사", "성적공시", "정정")),
+    Category("exam",         "시험",            ("중간고사", "기말고사", "기말시험", "중간시험", "성적공시", "정정")),
     Category("major-change", "전과·부복수전공",  ("전과", "부전공", "복수전공", "융합전공", "조기졸업")),
     Category("leave",        "휴학·복학",       ("휴학", "복학")),
-    Category("summer",       "계절학기",        ("계절학기",)),
+    Category("summer",       "계절학기",        ("계절학기", "계절수업")),
     Category("withdrawal",   "자퇴",            ("자퇴",)),
     Category("graduation",   "학위수여식",      ("학위수여", "졸업식")),
 )

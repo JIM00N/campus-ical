@@ -116,6 +116,11 @@ body {
     gap: 8px;
     justify-content: center;
     margin-bottom: 20px;
+    transition: opacity 0.15s;
+}
+.categories.disabled {
+    opacity: 0.35;
+    pointer-events: none;
 }
 .category-chip {
     cursor: pointer;
