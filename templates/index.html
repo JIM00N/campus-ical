@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}학사일정 캘린더 구독{% endblock %}
+{% block content %}
+<section class="hero">
+    <h1>학사일정을 캘린더 앱에서 자동으로</h1>
+    <p>학교를 선택하고 URL을 캘린더 앱에 등록하면, 시험·휴학·등록기간 등 학사일정이 자동으로 동기화됩니다.</p>
+</section>
+
+<section class="school-grid">
+    {% for school in schools %}
+    <a class="school-card" href="/s/{{ school.slug }}">
+        {% if school.logo_path %}
+        <img src="{{ school.logo_path }}" alt="{{ school.name }}">
+        {% else %}
+        <div class="logo-fallback">{{ school.name[0] }}</div>
+        {% endif %}
+        <span>{{ school.name }}</span>
+    </a>
+    {% else %}
+    <p class="empty">등록된 학교가 아직 없습니다.</p>
+    {% endfor %}
+</section>
+{% endblock %}
