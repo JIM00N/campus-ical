@@ -21,6 +21,15 @@ SCHOOLS = [
         "crawler_key": "gachon",
         "timezone": "Asia/Seoul",
     },
+    {
+        "slug": "dseoul",
+        "name": "동서울대학교",
+        "name_en": "Dongseoul University",
+        "logo_path": "/static/logos/dseoul.svg",
+        "website": "https://www.du.ac.kr/submenu.do?menuUrl=mk%2F8AIUzCNRzSS%2BQycenWQ%3D%3D&",
+        "crawler_key": "dseoul",
+        "timezone": "Asia/Seoul",
+    },
 ]
 
 
