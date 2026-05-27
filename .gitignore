@@ -13,3 +13,9 @@ ops/mac-cron/.env
 .vscode/
 memo.txt
 supabase/.temp/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example
