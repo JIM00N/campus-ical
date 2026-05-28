@@ -7,9 +7,8 @@
 - 사용자 한국어 응답 선호
 - **어조: 항상 존댓말. 반말 금지.** ("할게", "진행하자", "확인했어" 같은 반말체 사용 X → "하겠습니다", "진행하겠습니다", "확인했습니다")
 - 사이드 프로젝트 (한국 대학 학사일정을 iCal로 구독 가능하게)
-- mac mini 보유 (24/7 사용 가능)
+- mac mini 보유 (24/7 사용 가능). **현재 크롤러 cron 호스트 = mac mini** (Railway 역할 이관 완료, 2026-05-28)
 - Supabase Pro plan 결제 중 (활용 의지)
-- Railway는 trial(30일) 중. 종료 후 mac mini로 옮길 계획
 - 도메인 `madeinkr.net` 보유, 후이즈 DNS
 
 ## 아키텍처 결정 (옵션 D 변형)
@@ -19,8 +18,7 @@
 | DB | Supabase Postgres | 이주 완료 |
 | iCal 피드 (`/calendar/{slug}.ics`) | Supabase Edge Function `web` | 캘린더 앱이 직접 fetch |
 | 학생용 HTML 페이지 | 정적 HTML / 다른 호스팅 | brower quirk로 Edge Function 못 씀 |
-| 가천대 크롤러 (Selenium) | Railway cron (trial 동안) → mac mini | mac mini 이주는 추후 |
-| 동서울대 크롤러 | Railway cron, 가능 시 Edge Function | 단순 fetch |
+| 크롤러 cron (전 학교) | **mac mini** launchd (`ops/mac-cron`, 매일 03:00) | Docker 컨테이너 1회 실행 → `seed_schools && update_schools`. 코드 갱신은 mac mini에서 수동 `git pull && docker build` 필요 (자동 deploy 아님) |
 
 ## 코드/기술 제약
 
@@ -61,7 +59,7 @@
 ## 외부 작업이 필요한 (자동화 불가) 액션
 
 - Supabase: 프로젝트 생성, DB password reset, RLS 정책 변경 권한
-- Railway: 서비스 생성/삭제, Variables 입력, cron Run Now
+- mac mini cron: 코드 머지 후 mac mini에서 `git pull && docker build -t campus-ical-cron:local .` 후 다음 03:00 자동 실행 또는 `ops/mac-cron/run.sh`로 즉시 실행 (학교/일정 DB 반영)
 - 후이즈: DNS nameserver 변경
 - Cloudflare: 도메인 등록, Worker 작성
 - GitHub: 머지 (자가 머지 금지)
