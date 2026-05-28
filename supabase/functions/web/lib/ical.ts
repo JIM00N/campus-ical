@@ -9,6 +9,29 @@ function fmtDate(s: string): string {
   return s.replaceAll("-", "");
 }
 
+function addDays(s: string, n: number): string {
+  const d = new Date(s + "T00:00:00Z");
+  d.setUTCDate(d.getUTCDate() + n);
+  return d.toISOString().slice(0, 10);
+}
+
+// 여러 날에 걸친 일정을 시작일/종료일 두 개의 하루짜리 마커로 분리한다.
+// DTEND는 exclusive라 실제 마지막 날은 dtend - 1일.
+// 하루짜리 일정은 그대로 둔다.
+export function toEndpointEvents(events: Event[]): Event[] {
+  const out: Event[] = [];
+  for (const ev of events) {
+    const lastDay = addDays(ev.dtend, -1);
+    if (lastDay <= ev.dtstart) {
+      out.push(ev);
+      continue;
+    }
+    out.push({ summary: `${ev.summary} (시작)`, dtstart: ev.dtstart, dtend: addDays(ev.dtstart, 1) });
+    out.push({ summary: `${ev.summary} (종료)`, dtstart: lastDay, dtend: ev.dtend });
+  }
+  return out;
+}
+
 function fmtUtc(d: Date): string {
   const pad = (n: number) => String(n).padStart(2, "0");
   return (

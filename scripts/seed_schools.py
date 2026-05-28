@@ -30,6 +30,42 @@ SCHOOLS = [
         "crawler_key": "dseoul",
         "timezone": "Asia/Seoul",
     },
+    {
+        "slug": "snu",
+        "name": "서울대학교",
+        "name_en": "Seoul National University",
+        "logo_path": "/static/logos/snu.svg",
+        "website": "https://www.snu.ac.kr/academics/resources/calendar",
+        "crawler_key": "snu",
+        "timezone": "Asia/Seoul",
+    },
+    {
+        "slug": "korea",
+        "name": "고려대학교",
+        "name_en": "Korea University",
+        "logo_path": "/static/logos/korea.svg",
+        "website": "https://registrar.korea.ac.kr/eduinfo/affairs/schedule.do",
+        "crawler_key": "korea",
+        "timezone": "Asia/Seoul",
+    },
+    {
+        "slug": "knsu",
+        "name": "한국체육대학교",
+        "name_en": "Korea National Sport University",
+        "logo_path": "/static/logos/knsu.svg",
+        "website": "https://www.knsu.ac.kr/knsu/academic/academic-schedule.do",
+        "crawler_key": "knsu",
+        "timezone": "Asia/Seoul",
+    },
+    {
+        "slug": "hallym",
+        "name": "한림대학교",
+        "name_en": "Hallym University",
+        "logo_path": "/static/logos/hallym.svg",
+        "website": "https://www.hallym.ac.kr/hallym/1062/subview.do",
+        "crawler_key": "hallym",
+        "timezone": "Asia/Seoul",
+    },
 ]
 
 

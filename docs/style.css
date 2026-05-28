@@ -8,6 +8,15 @@ body {
 .topbar { background: white; border-bottom: 1px solid #e5e7eb; padding: 14px 24px; }
 .brand { font-weight: 700; color: #111827; text-decoration: none; font-size: 18px; }
 .main { flex: 1; max-width: 720px; margin: 0 auto; padding: 48px 24px; width: 100%; }
+.search-box { margin-bottom: 28px; }
+.search-box input {
+  width: 100%; padding: 14px 18px; border: 1px solid #d1d5db; border-radius: 12px;
+  font-size: 16px; background: white; color: #111827;
+}
+.search-box input:focus {
+  outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+}
+.no-result { text-align: center; color: #6b7280; margin-top: 32px; }
 .hero h1 { font-size: 30px; margin-bottom: 8px; color: #111827; }
 .hero p { color: #4b5563; }
 .school-grid {
@@ -55,6 +64,18 @@ body {
 }
 .category-chip input:checked + span { background: #2563eb; border-color: #2563eb; color: white; }
 .category-chip:hover span { border-color: #9ca3af; }
+.endpoint-toggle { display: inline-block; cursor: pointer; margin-bottom: 6px; }
+.endpoint-toggle input { position: absolute; opacity: 0; pointer-events: none; }
+.endpoint-toggle span {
+  display: inline-block; padding: 8px 16px; border: 1px solid #d1d5db;
+  border-radius: 999px; font-size: 13px; color: #4b5563; background: white;
+  transition: all 0.15s;
+}
+.endpoint-toggle span::before { content: "✓ "; opacity: 0.4; }
+.endpoint-toggle input:checked + span { background: #2563eb; border-color: #2563eb; color: white; }
+.endpoint-toggle input:checked + span::before { opacity: 1; }
+.endpoint-toggle:hover span { border-color: #9ca3af; }
+.endpoint-hint { font-size: 12px; color: #9ca3af; margin: 0 0 20px; }
 .url-box { display: flex; gap: 8px; margin-bottom: 8px; }
 .url-box input {
   flex: 1; padding: 12px 14px; border: 1px solid #d1d5db; border-radius: 10px;

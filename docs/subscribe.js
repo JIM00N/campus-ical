@@ -10,6 +10,7 @@
   var categoriesBox = document.querySelector('.categories');
   var modeRadios = document.querySelectorAll('input[name="mode"]');
   var catBoxes = document.querySelectorAll('input[data-cat]');
+  var endpointsToggle = document.getElementById('endpointsToggle');
   var copyBtn = document.getElementById('copyBtn');
   var status = document.getElementById('copyStatus');
 
@@ -29,17 +30,20 @@
       catBoxes[i].disabled = disabled;
       if (disabled) catBoxes[i].checked = false;
     }
-    var url = baseUrl;
+    var params = [];
     if (!disabled) {
       var cats = selectedCats();
-      if (cats.length) url = baseUrl + '?categories=' + cats.join(',');
+      if (cats.length) params.push('categories=' + cats.join(','));
     }
+    if (endpointsToggle && endpointsToggle.checked) params.push('endpoints=1');
+    var url = params.length ? baseUrl + '?' + params.join('&') : baseUrl;
     icalInput.value = url;
     subscribeBtn.href = url.replace(/^https?/, 'webcal');
   }
 
   for (var i = 0; i < modeRadios.length; i++) modeRadios[i].addEventListener('change', refresh);
   for (var j = 0; j < catBoxes.length; j++) catBoxes[j].addEventListener('change', refresh);
+  if (endpointsToggle) endpointsToggle.addEventListener('change', refresh);
 
   copyBtn.addEventListener('click', function () {
     if (navigator.clipboard && navigator.clipboard.writeText) {

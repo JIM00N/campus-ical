@@ -5,7 +5,7 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
 import { filterByCategories, parseCategoryParam, categoryLabels } from "./lib/categories.ts";
-import { buildCalendar } from "./lib/ical.ts";
+import { buildCalendar, toEndpointEvents } from "./lib/ical.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -49,10 +49,14 @@ Deno.serve(async (req) => {
         (rows ?? []) as Array<{ summary: string; dtstart: string; dtend: string }>,
         wanted,
       );
+      const endpointsOnly = ["1", "true", "yes"].includes(
+        (url.searchParams.get("endpoints") ?? "").toLowerCase(),
+      );
+      const events = endpointsOnly ? toEndpointEvents(filtered) : filtered;
       const calName = wanted.size > 0
         ? `${school.name} (${categoryLabels(wanted).join(", ")})`
         : school.name;
-      const body = await buildCalendar(school, filtered, calName);
+      const body = await buildCalendar(school, events, calName);
 
       return new Response(body, {
         status: 200,

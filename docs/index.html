@@ -19,6 +19,9 @@ new PartnersCoupang.G({"id":992393,"template":"carousel","trackingCode":"AF93630
 </aside>
 <aside class="side-ad side-ad--right"><div class="ad-placeholder ad-placeholder--vertical"><span>광고 영역<br>(160 × 600)</span></div></aside>
 <main class="main">
+<section class="search-box">
+<input id="schoolSearch" type="search" placeholder="학교 이름 검색" autocomplete="off" aria-label="학교 이름 검색">
+</section>
 <section class="hero">
 <h1>학사일정을 캘린더 앱에서 자동으로</h1>
 <p>학교를 선택하고 URL을 캘린더 앱에 등록하면, 시험·휴학·등록기간 등 학사일정이 자동으로 동기화됩니다.</p>
@@ -26,7 +29,12 @@ new PartnersCoupang.G({"id":992393,"template":"carousel","trackingCode":"AF93630
 <section class="school-grid">
 <a class="school-card" href="s/gachon.html"><img src="https://cdn.jsdelivr.net/gh/JIM00N/campus-ical@main/static/logos/gachon.png" alt="가천대학교"><span>가천대학교</span></a>
 <a class="school-card" href="s/dseoul.html"><img src="https://cdn.jsdelivr.net/gh/JIM00N/campus-ical@main/static/logos/dseoul-official.svg" alt="동서울대학교"><span>동서울대학교</span></a>
+<a class="school-card" href="s/snu.html"><img src="https://cdn.jsdelivr.net/gh/JIM00N/campus-ical@main/static/logos/snu.svg" alt="서울대학교"><span>서울대학교</span></a>
+<a class="school-card" href="s/korea.html"><img src="https://cdn.jsdelivr.net/gh/JIM00N/campus-ical@main/static/logos/korea.svg" alt="고려대학교"><span>고려대학교</span></a>
+<a class="school-card" href="s/knsu.html"><img src="https://cdn.jsdelivr.net/gh/JIM00N/campus-ical@main/static/logos/knsu.svg" alt="한국체육대학교"><span>한국체육대학교</span></a>
+<a class="school-card" href="s/hallym.html"><img src="https://cdn.jsdelivr.net/gh/JIM00N/campus-ical@main/static/logos/hallym.svg" alt="한림대학교"><span>한림대학교</span></a>
 </section>
+<p id="noResult" class="no-result" hidden>검색 결과가 없습니다.</p>
 </main>
 <aside class="ad-slot">
 <ins class="adsbygoogle"
@@ -49,6 +57,28 @@ new PartnersCoupang.G({"id":992393,"template":"carousel","trackingCode":"AF93630
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
 </aside>
-<footer class="footer"><p>학사일정은 각 학교 공식 사이트에서 매일 자동으로 동기화됩니다. 일정이 변경되면 캘린더에도 반영됩니다.</p></footer>
+<footer class="footer">
+<p>학사일정은 각 학교 공식 사이트에서 매일 자동으로 동기화됩니다. 일정이 변경되면 캘린더에도 반영됩니다.</p>
+<p class="footer-email">문의: jimoon4b@gmail.com</p>
+</footer>
+<script>
+(function () {
+  var input = document.getElementById('schoolSearch');
+  var cards = document.querySelectorAll('.school-card');
+  var noResult = document.getElementById('noResult');
+  var norm = function (s) { return s.toLowerCase().replace(/\s+/g, ''); };
+  input.addEventListener('input', function () {
+    var q = norm(input.value);
+    var visible = 0;
+    cards.forEach(function (card) {
+      var name = norm(card.querySelector('span').textContent);
+      var match = name.indexOf(q) !== -1;
+      card.hidden = !match;
+      if (match) visible++;
+    });
+    noResult.hidden = visible !== 0;
+  });
+})();
+</script>
 </body>
 </html>
