@@ -1,12 +1,39 @@
 from __future__ import annotations
 
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from hashlib import sha1
+from types import SimpleNamespace
 from typing import Iterable
 
 from icalendar import Calendar, Event
 
 from app.models import Event as EventModel, School
+
+
+def to_endpoint_events(events: Iterable[EventModel]) -> list:
+    """여러 날 일정을 시작일/종료일 두 개의 하루짜리 마커로 분리한다.
+
+    DTEND는 exclusive라 실제 마지막 날은 dtend - 1일. 하루짜리 일정은 그대로 둔다.
+    """
+    out: list = []
+    for ev in events:
+        last_day = ev.dtend - timedelta(days=1)
+        if last_day <= ev.dtstart:
+            out.append(ev)
+            continue
+        out.append(SimpleNamespace(
+            summary=f"{ev.summary} (시작)",
+            dtstart=ev.dtstart,
+            dtend=ev.dtstart + timedelta(days=1),
+            description=ev.description,
+        ))
+        out.append(SimpleNamespace(
+            summary=f"{ev.summary} (종료)",
+            dtstart=last_day,
+            dtend=ev.dtend,
+            description=ev.description,
+        ))
+    return out
 
 
 def _uid(school_slug: str, ev: EventModel) -> str:

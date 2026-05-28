@@ -35,6 +35,7 @@
 - "전체 받기"일 땐 카테고리 chip이 dim + 클릭 불가 (`disabled` 클래스 + `disabled` attr)
 - "골라 받기"로 전환 시 chip 활성화, 전환 시 체크 자동 해제
 - URL 박스의 값은 카테고리 체크에 따라 동적 업데이트 (`?categories=tuition,exam` 패턴)
+- "시작·끝만 표시" 토글 (`?endpoints=1`): 여러 날 일정을 시작일/종료일 두 개의 하루짜리 마커("… (시작)" / "… (종료)")로 분리. 중복 일정 많을 때 캘린더 정리용. 카테고리와 독립 (전체/골라 모두 적용). 구현은 ical(TS)/ical_generator(PY) 양쪽 `toEndpointEvents`/`to_endpoint_events`
 - Google AdSense 슬롯 3개 (좌/우 sticky + 하단). client/slot ID 비면 placeholder 박스
 
 ## 카테고리 (동적 keyword 매칭, DB 컬럼 아님)

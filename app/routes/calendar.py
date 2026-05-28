@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.categories import CATEGORY_BY_SLUG, filter_events, parse_category_param
 from app.db import get_session
-from app.ical_generator import build_calendar
+from app.ical_generator import build_calendar, to_endpoint_events
 from app.models import Event, School
 
 router = APIRouter()
@@ -14,6 +14,7 @@ router = APIRouter()
 def get_calendar(
     slug: str,
     categories: str = Query("", description="comma-separated category slugs"),
+    endpoints: bool = Query(False, description="multi-day events as start/end markers only"),
     session: Session = Depends(get_session),
 ):
     school = session.scalar(select(School).where(School.slug == slug))
@@ -26,6 +27,8 @@ def get_calendar(
 
     wanted = parse_category_param(categories)
     events = filter_events(events, wanted)
+    if endpoints:
+        events = to_endpoint_events(events)
 
     cal_name = school.name
     if wanted:
