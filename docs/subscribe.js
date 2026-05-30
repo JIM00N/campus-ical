@@ -295,6 +295,71 @@
   });
 
   // ────────────────────────────────────────────────────────────
+  // 3.5) 다가오는 일정 (학교 페이지) — .ics를 직접 파싱해 D-day 표시.
+  //      Edge Function 변경 없이 프론트에서 처리.
+  // ────────────────────────────────────────────────────────────
+  var upcomingRoot = document.getElementById('upcomingRoot');
+  if (upcomingRoot && schoolSlug) renderUpcoming(upcomingRoot, schoolSlug);
+
+  function renderUpcoming(root, slug) {
+    fetch('/calendar/' + slug + '.ics')
+      .then(function (r) { return r.ok ? r.text() : null; })
+      .then(function (text) {
+        if (!text) return;
+        var today = startOfToday();
+        var up = parseIcs(text)
+          .filter(function (e) { return e.end > today; })   // 아직 안 끝난 일정
+          .sort(function (a, b) { return a.start - b.start; })
+          .slice(0, 5);
+        if (!up.length) return;
+        var html = '<h3 class="upcoming__title">📅 다가오는 일정</h3><ul class="upcoming__list">';
+        for (var i = 0; i < up.length; i++) {
+          var e = up[i];
+          var dd = Math.round((e.start - today) / 86400000);
+          var badge = 'D-' + dd, cls = '';
+          if (dd === 0) { badge = 'D-DAY'; cls = ' upcoming__badge--today'; }
+          else if (dd < 0) { badge = '진행중'; cls = ' upcoming__badge--now'; }
+          html += '<li class="upcoming__item">'
+            + '<span class="upcoming__badge' + cls + '">' + badge + '</span>'
+            + '<span class="upcoming__name"></span>'
+            + '<span class="upcoming__date">' + fmtRange(e.start, e.end) + '</span>'
+            + '</li>';
+        }
+        html += '</ul>';
+        root.className = 'upcoming';
+        root.innerHTML = html;
+        var names = root.querySelectorAll('.upcoming__name');
+        for (var j = 0; j < names.length; j++) names[j].textContent = up[j].summary;
+      })
+      .catch(function () { /* 조용히 실패 */ });
+  }
+
+  function parseIcs(text) {
+    var out = [];
+    var blocks = text.split('BEGIN:VEVENT');
+    for (var i = 1; i < blocks.length; i++) {
+      var sm = blocks[i].match(/\nSUMMARY:(.*)/);
+      var ds = blocks[i].match(/DTSTART[^:\n]*:(\d{8})/);
+      var de = blocks[i].match(/DTEND[^:\n]*:(\d{8})/);
+      if (!sm || !ds) continue;
+      var start = ymd(ds[1]);
+      out.push({
+        summary: sm[1].replace(/\\([,;\\])/g, '$1').trim(),
+        start: start,
+        end: de ? ymd(de[1]) : start
+      });
+    }
+    return out;
+  }
+  function ymd(s) { return new Date(+s.slice(0, 4), +s.slice(4, 6) - 1, +s.slice(6, 8)); }
+  function startOfToday() { var n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); }
+  function fmtRange(start, end) {
+    var last = new Date(end.getTime() - 86400000); // DTEND는 비포함 → 실제 마지막 날
+    return last <= start ? fmtMD(start) : fmtMD(start) + ' ~ ' + fmtMD(last);
+  }
+  function fmtMD(d) { return (d.getMonth() + 1) + '월 ' + d.getDate() + '일'; }
+
+  // ────────────────────────────────────────────────────────────
   // 4) 캘린더 앱 등록 가이드 (#howRoot 가 있을 때만)
   //    안드로이드(Google Calendar 모바일 앱 한계)를 가장 위에 강조.
   // ────────────────────────────────────────────────────────────
