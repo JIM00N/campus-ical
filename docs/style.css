@@ -214,15 +214,66 @@ body {
   border: 1px solid #e5e7eb; border-radius: 14px; }
 .changelog h2 { font-size: 18px; margin: 0 0 14px; color: #111827; }
 .changelog-list { list-style: none; margin: 0; padding: 0; }
-.changelog-list li {
-  padding: 10px 0; border-bottom: 1px solid #f3f4f6;
-  font-size: 14px; color: #4b5563;
-  display: flex; gap: 12px; align-items: baseline;
-}
+.changelog-list li { border-bottom: 1px solid #f3f4f6; }
 .changelog-list li:last-child { border-bottom: none; }
-.changelog-list time {
+.cl-item {
+  display: flex; align-items: center; gap: 12px; width: 100%;
+  padding: 12px 4px; background: none; border: none; cursor: pointer;
+  font: inherit; color: inherit; text-align: left;
+}
+.cl-item:hover { background: #f9fafb; }
+.cl-item time {
   color: #9ca3af; font-variant-numeric: tabular-nums;
   min-width: 88px; flex-shrink: 0; font-size: 13px;
+}
+.cl-item__title {
+  flex: 1; min-width: 0; font-size: 14px; color: #1f2937;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.cl-item__arrow { color: #cbd5e1; font-size: 18px; flex-shrink: 0; line-height: 1; }
+.changelog-more {
+  display: block; width: 100%; margin-top: 6px; padding: 11px;
+  background: none; border: none; border-top: 1px solid #f3f4f6;
+  color: #6b7280; font: inherit; font-size: 13px; font-weight: 500; cursor: pointer;
+}
+.changelog-more:hover { color: #2563eb; background: #f9fafb; }
+.changelog-more[hidden] { display: none; }
+
+/* 업데이트 내역 상세 모달 */
+.cl-modal { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.cl-modal[hidden] { display: none; }
+.cl-modal__backdrop { position: absolute; inset: 0; background: rgba(17,24,39,0.5); }
+.cl-modal__panel {
+  position: relative; background: white; border-radius: 16px;
+  max-width: 560px; width: 100%; max-height: 85vh; overflow: auto;
+  padding: 28px 28px 22px; box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+}
+.cl-modal__close {
+  position: absolute; top: 10px; right: 14px; border: none; background: none;
+  font-size: 26px; line-height: 1; color: #9ca3af; cursor: pointer; padding: 4px;
+}
+.cl-modal__close:hover { color: #4b5563; }
+.cl-modal__date { color: #9ca3af; font-size: 13px; font-variant-numeric: tabular-nums; }
+.cl-modal__title { font-size: 20px; margin: 4px 0 16px; color: #111827; line-height: 1.4; }
+.cl-modal__body { color: #374151; font-size: 15px; line-height: 1.7; }
+.cl-modal__body p { margin: 0 0 12px; }
+.cl-modal__body ul { margin: 0 0 12px; padding-left: 20px; }
+.cl-modal__body li { margin-bottom: 8px; }
+.cl-modal__body strong { color: #111827; }
+.cl-modal__nav { display: flex; gap: 10px; margin-top: 22px; padding-top: 16px; border-top: 1px solid #f3f4f6; }
+.cl-modal__navbtn {
+  flex: 1 1 0; min-width: 0; cursor: pointer;
+  background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px;
+  padding: 10px 14px; font: inherit; color: inherit;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.cl-modal__navbtn[hidden] { display: none; }
+.cl-modal__navbtn:hover { background: #f3f4f6; }
+.cl-modal__next { text-align: right; align-items: flex-end; }
+.cl-nav__label { font-size: 12px; color: #6b7280; }
+.cl-nav__title {
+  font-size: 13px; color: #111827; font-weight: 500; max-width: 100%;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 
 /* ── 학교 페이지 인라인 액션(공유) ───────────────────────── */
