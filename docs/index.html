@@ -11,13 +11,23 @@ crossorigin="anonymous"></script>
 </head>
 <body>
 <header class="topbar"><a href="./" class="brand">학사일정 구독</a></header>
+
 <aside class="side-ad side-ad--left">
-<script src="https://ads-partners.coupang.com/g.js"></script>
-<script>
-new PartnersCoupang.G({"id":992393,"template":"carousel","trackingCode":"AF9363098","width":"160","height":"900","tsource":""});
-</script>
+<div class="side-cta side-cta--request">
+<p class="side-cta__title">내 학교가<br>아직 없나요?</p>
+<a href="https://docs.google.com/forms/d/e/1FAIpQLSdaVv6qWCpsLo03RjnmFlgEWvkisEn8r80Apr2wVM2102CO7Q/viewform" target="_blank" rel="noopener" class="side-cta__btn">학교 신청하기</a>
+<p class="side-cta__hint">신청이 많은 학교부터 추가됩니다</p>
+</div>
 </aside>
-<aside class="side-ad side-ad--right"><div class="ad-placeholder ad-placeholder--vertical"><span>광고 영역<br>(160 × 600)</span></div></aside>
+
+<aside class="side-ad side-ad--right">
+<div class="side-cta side-cta--share">
+<p class="side-cta__title">친구에게<br>공유하기</p>
+<button type="button" class="side-cta__btn js-share-btn">📤 공유</button>
+<p class="side-cta__hint">같은 학교 친구가 더 좋아할 거예요</p>
+</div>
+</aside>
+
 <main class="main">
 <section class="search-box">
 <input id="schoolSearch" type="search" placeholder="학교 이름 검색" autocomplete="off" aria-label="학교 이름 검색">
@@ -26,6 +36,7 @@ new PartnersCoupang.G({"id":992393,"template":"carousel","trackingCode":"AF93630
 <h1>학사일정을 캘린더 앱에서 자동으로</h1>
 <p>학교를 선택하고 URL을 캘린더 앱에 등록하면, 시험·휴학·등록기간 등 학사일정이 자동으로 동기화됩니다.</p>
 </section>
+
 <section class="school-grid">
 <a class="school-card" href="s/gachon.html"><img src="https://cdn.jsdelivr.net/gh/JIM00N/campus-ical@main/static/logos/gachon.png" alt="가천대학교"><span>가천대학교</span></a>
 <a class="school-card" href="s/dseoul.html"><img src="https://cdn.jsdelivr.net/gh/JIM00N/campus-ical@main/static/logos/dseoul-official.svg" alt="동서울대학교"><span>동서울대학교</span></a>
@@ -33,9 +44,21 @@ new PartnersCoupang.G({"id":992393,"template":"carousel","trackingCode":"AF93630
 <a class="school-card" href="s/korea.html"><img src="https://cdn.jsdelivr.net/gh/JIM00N/campus-ical@main/static/logos/korea.svg" alt="고려대학교"><span>고려대학교</span></a>
 <a class="school-card" href="s/knsu.html"><img src="https://cdn.jsdelivr.net/gh/JIM00N/campus-ical@main/static/logos/knsu.gif" alt="한국체육대학교"><span>한국체육대학교</span></a>
 <a class="school-card" href="s/hallym.html"><img src="https://cdn.jsdelivr.net/gh/JIM00N/campus-ical@main/static/logos/hallym.png" alt="한림대학교"><span>한림대학교</span></a>
+<a class="school-card school-card--request" href="https://docs.google.com/forms/d/e/1FAIpQLSdaVv6qWCpsLo03RjnmFlgEWvkisEn8r80Apr2wVM2102CO7Q/viewform" target="_blank" rel="noopener"><span class="request-plus">＋</span><span>내 학교 신청하기</span></a>
 </section>
 <p id="noResult" class="no-result" hidden>검색 결과가 없습니다.</p>
+
+<section class="changelog">
+<h2>📋 업데이트 내역</h2>
+<ul class="changelog-list">
+<li><time>2026-05-30</time><span>캘린더 앱별 구독 가이드 강화(Android 함정 안내), 공유·학교 신청 CTA, 누적 통계 추가</span></li>
+<li><time>2026-05-29</time><span>서울대·고려대·한국체대·한림대 추가 (총 6개교 지원)</span></li>
+<li><time>2026-05-28</time><span>카테고리 필터('시험만 받기' 등) · '시작·끝만 표시' 토글 추가</span></li>
+<li><time>2026-05-27</time><span>iCal 구독 서비스 오픈 (가천대·동서울대)</span></li>
+</ul>
+</section>
 </main>
+
 <aside class="ad-slot">
 <ins class="adsbygoogle"
      style="display:block"
@@ -61,24 +84,28 @@ new PartnersCoupang.G({"id":992393,"template":"carousel","trackingCode":"AF93630
 <p>학사일정은 각 학교 공식 사이트에서 매일 자동으로 동기화됩니다. 일정이 변경되면 캘린더에도 반영됩니다.</p>
 <p class="footer-email">문의: jimoon4b@gmail.com</p>
 </footer>
+
 <script>
-(function () {
+(function(){
   var input = document.getElementById('schoolSearch');
   var cards = document.querySelectorAll('.school-card');
   var noResult = document.getElementById('noResult');
-  var norm = function (s) { return s.toLowerCase().replace(/\s+/g, ''); };
+  if (!input) return;
   input.addEventListener('input', function () {
-    var q = norm(input.value);
-    var visible = 0;
-    cards.forEach(function (card) {
-      var name = norm(card.querySelector('span').textContent);
-      var match = name.indexOf(q) !== -1;
-      card.hidden = !match;
-      if (match) visible++;
-    });
-    noResult.hidden = visible !== 0;
+    var q = (input.value || '').trim().toLowerCase();
+    var anyMatch = false;
+    for (var i = 0; i < cards.length; i++) {
+      // 신청 카드는 항상 표시
+      if (cards[i].classList.contains('school-card--request')) continue;
+      var name = (cards[i].textContent || '').toLowerCase();
+      var ok = !q || name.indexOf(q) >= 0;
+      cards[i].style.display = ok ? '' : 'none';
+      if (ok) anyMatch = true;
+    }
+    if (noResult) noResult.hidden = !q || anyMatch;
   });
 })();
 </script>
+<script src="subscribe.js"></script>
 </body>
 </html>

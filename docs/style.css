@@ -109,8 +109,113 @@ body {
 }
 @media (min-width: 1180px) {
   .side-ad { display: block; position: fixed; top: 96px; }
-  /* 왼쪽: 쿠팡 carousel 200px wide. 오른쪽: placeholder 160px wide. */
-  .side-ad--left  { width: 200px; left:  max(24px, calc((100vw - 720px) / 2 - 220px)); }
+  .side-ad--left  { width: 160px; left:  max(24px, calc((100vw - 720px) / 2 - 200px)); }
   .side-ad--right { width: 160px; right: max(24px, calc((100vw - 720px) / 2 - 200px)); }
 }
+
+/* ── 사이드 CTA (광고 자리에 컨텐츠) ───────────────────────── */
+.side-cta {
+  width: 160px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px 14px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.side-cta__title {
+  font-weight: 700; font-size: 14px; color: #111827;
+  margin: 0 0 14px; line-height: 1.4;
+}
+.side-cta__btn {
+  display: inline-block; width: 100%; padding: 10px 12px;
+  border-radius: 8px; font-size: 13px; font-weight: 600;
+  text-decoration: none; cursor: pointer; border: none;
+  font-family: inherit;
+}
+.side-cta--request .side-cta__btn { background: #2563eb; color: white; }
+.side-cta--request .side-cta__btn:hover { background: #1d4ed8; }
+.side-cta--share .side-cta__btn { background: #fee500; color: #111827; }
+.side-cta--share .side-cta__btn:hover { background: #fdd835; }
+.side-cta__hint {
+  font-size: 11px; color: #9ca3af; margin: 10px 0 0; line-height: 1.4;
+}
+
+/* ── 학교 신청 카드 (school-grid 내) ───────────────────────── */
+.school-card--request {
+  background: #eff6ff; border-color: #bfdbfe;
+}
+.school-card--request:hover { background: #dbeafe; }
+.school-card--request .request-plus {
+  width: 64px; height: 64px; display: flex; align-items: center; justify-content: center;
+  font-size: 40px; color: #2563eb; font-weight: 300; line-height: 1;
+}
+
+/* ── changelog ───────────────────────── */
+.changelog { margin-top: 40px; padding: 24px; background: white;
+  border: 1px solid #e5e7eb; border-radius: 14px; }
+.changelog h2 { font-size: 18px; margin: 0 0 14px; color: #111827; }
+.changelog-list { list-style: none; margin: 0; padding: 0; }
+.changelog-list li {
+  padding: 10px 0; border-bottom: 1px solid #f3f4f6;
+  font-size: 14px; color: #4b5563;
+  display: flex; gap: 12px; align-items: baseline;
+}
+.changelog-list li:last-child { border-bottom: none; }
+.changelog-list time {
+  color: #9ca3af; font-variant-numeric: tabular-nums;
+  min-width: 88px; flex-shrink: 0; font-size: 13px;
+}
+
+/* ── 학교 페이지 인라인 액션(공유) ───────────────────────── */
+.action-row {
+  display: flex; gap: 8px; justify-content: center;
+  flex-wrap: wrap; margin-bottom: 24px;
+}
+.action-row .subscribe-btn { margin-bottom: 0; }
+.share-btn-inline {
+  display: inline-block; padding: 12px 18px; background: #fee500;
+  color: #111827; border: none; border-radius: 10px;
+  font-weight: 600; cursor: pointer; font-size: 14px;
+  font-family: inherit;
+}
+.share-btn-inline:hover { background: #fdd835; }
+
+/* ── 강화된 캘린더 등록 가이드 ───────────────────────── */
+.how { text-align: left; margin-top: 24px; }
+.how__title { font-size: 16px; margin: 0 0 12px; color: #111827; }
+.how-platform {
+  background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px;
+  padding: 12px 16px; margin-bottom: 8px;
+}
+.how-platform[open] { background: #f3f4f6; }
+.how-platform summary {
+  cursor: pointer; font-weight: 600; font-size: 14px;
+  list-style: none; padding: 4px 0;
+  display: flex; align-items: center; gap: 10px;
+}
+.how-platform summary::-webkit-details-marker { display: none; }
+.how-platform summary::before {
+  content: "▸"; display: inline-block; transition: transform 0.15s;
+  font-size: 11px; color: #9ca3af;
+}
+.how-platform[open] summary::before { transform: rotate(90deg); }
+.how-platform__tag {
+  font-size: 11px; padding: 2px 8px; border-radius: 999px;
+  background: #fef3c7; color: #92400e; font-weight: 600;
+}
+.how-platform ol { margin: 10px 0 0; padding-left: 20px; }
+.how-platform li { font-size: 13px; color: #4b5563; margin-bottom: 6px; line-height: 1.6; }
+.how-platform a { color: #2563eb; }
+.how-warn {
+  background: #fef3c7; border: 1px solid #fde68a; border-radius: 8px;
+  padding: 10px 12px; margin: 10px 0 0; font-size: 13px; color: #92400e; line-height: 1.6;
+}
+.how-warn strong { color: #78350f; }
+.how-tip {
+  background: #dbeafe; border: 1px solid #bfdbfe; border-radius: 8px;
+  padding: 10px 12px; margin: 10px 0 0; font-size: 13px; color: #1e40af; line-height: 1.6;
+}
+
 .footer { padding: 24px; text-align: center; color: #9ca3af; font-size: 13px; }
+.footer-email { margin-top: 6px; }
