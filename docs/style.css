@@ -290,6 +290,28 @@ body {
 }
 .share-btn-inline:hover { background: #fdd835; }
 
+/* ── 다가오는 일정 (학교 페이지, D-day) ───────────────────────── */
+.upcoming { margin-top: 20px; text-align: left; }
+.upcoming__title { font-size: 16px; margin: 0 0 10px; color: #111827; }
+.upcoming__list { list-style: none; margin: 0; padding: 0; }
+.upcoming__item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 0; border-bottom: 1px solid #f3f4f6;
+}
+.upcoming__item:last-child { border-bottom: none; }
+.upcoming__badge {
+  flex-shrink: 0; min-width: 54px; text-align: center;
+  padding: 4px 8px; border-radius: 8px; font-size: 13px; font-weight: 700;
+  background: #eff6ff; color: #2563eb; font-variant-numeric: tabular-nums;
+}
+.upcoming__badge--today { background: #2563eb; color: #fff; }
+.upcoming__badge--now { background: #fef3c7; color: #92400e; }
+.upcoming__name {
+  flex: 1; min-width: 0; font-size: 14px; color: #1f2937; font-weight: 500;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.upcoming__date { flex-shrink: 0; font-size: 13px; color: #9ca3af; }
+
 /* ── 강화된 캘린더 등록 가이드 ───────────────────────── */
 .how { text-align: left; margin-top: 24px; }
 .how__title { font-size: 16px; margin: 0 0 12px; color: #111827; }
