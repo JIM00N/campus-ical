@@ -12,12 +12,19 @@ crossorigin="anonymous"></script>
 <body>
 <header class="topbar"><a href="../" class="brand">학사일정 구독</a></header>
 <aside class="side-ad side-ad--left">
-<script src="https://ads-partners.coupang.com/g.js"></script>
-<script>
-new PartnersCoupang.G({"id":992393,"template":"carousel","trackingCode":"AF9363098","width":"160","height":"900","tsource":""});
-</script>
+<div class="side-cta side-cta--request">
+<p class="side-cta__title">내 학교가<br>아직 없나요?</p>
+<a href="https://docs.google.com/forms/d/e/1FAIpQLSdaVv6qWCpsLo03RjnmFlgEWvkisEn8r80Apr2wVM2102CO7Q/viewform" target="_blank" rel="noopener" class="side-cta__btn">학교 신청하기</a>
+<p class="side-cta__hint">신청이 많은 학교부터 추가됩니다</p>
+</div>
 </aside>
-<aside class="side-ad side-ad--right"><div class="ad-placeholder ad-placeholder--vertical"><span>광고 영역<br>(160 × 600)</span></div></aside>
+<aside class="side-ad side-ad--right">
+<div class="side-cta side-cta--share">
+<p class="side-cta__title">친구에게<br>공유하기</p>
+<button type="button" class="side-cta__btn js-share-btn">📤 공유</button>
+<p class="side-cta__hint">같은 학교 친구가 더 좋아할 거예요</p>
+</div>
+</aside>
 <main class="main">
 <section class="school-detail">
 <img class="school-logo" src="https://cdn.jsdelivr.net/gh/JIM00N/campus-ical@main/static/logos/gachon.png" alt="가천대학교">
@@ -48,16 +55,12 @@ new PartnersCoupang.G({"id":992393,"template":"carousel","trackingCode":"AF93630
 </div>
 <p id="copyStatus" class="copy-status"></p>
 
+<div class="action-row">
 <a id="subscribeBtn" class="subscribe-btn" href="webcal://campus-cal.com/calendar/gachon.ics">캘린더 앱으로 바로 추가</a>
+<button type="button" class="share-btn-inline js-share-btn">📤 친구에게 공유</button>
+</div>
 
-<details class="how">
-<summary>캘린더 앱에 등록하는 방법</summary>
-<ol>
-<li><strong>Google 캘린더</strong>: 좌측 "다른 캘린더" → "URL로 추가" → 위 URL 붙여넣기</li>
-<li><strong>Apple 캘린더 (iPhone/Mac)</strong>: "캘린더 추가" → "구독 캘린더 추가" → 위 URL 붙여넣기</li>
-<li><strong>Outlook</strong>: 캘린더 → "캘린더 추가" → "웹에서 구독" → 위 URL 붙여넣기</li>
-</ol>
-</details>
+<div id="howRoot" class="how"></div>
 </section>
 </main>
 <aside class="ad-slot">
