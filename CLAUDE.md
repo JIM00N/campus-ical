@@ -16,15 +16,15 @@
 | 구성요소 | 위치 | 비고 |
 | --- | --- | --- |
 | DB | Supabase Postgres | 이주 완료 |
-| iCal 피드 (`/calendar/{slug}.ics`) | Supabase Edge Function `web` | 캘린더 앱이 직접 fetch |
-| 학생용 HTML 페이지 | 정적 HTML / 다른 호스팅 | brower quirk로 Edge Function 못 씀 |
+| iCal 피드 / 통계·복사 API (`/calendar/{slug}.ics`, `/stats`, `/copy/{slug}`) | Supabase Edge Function `web` | 아래 Worker가 프록시해서 호출 (학생에게 supabase.co 미노출). 캘린더 앱 fetch는 browser quirk 영향 없음 |
+| 정적 페이지 + 라우팅 (학생용 HTML/CSS/JS) | **Cloudflare Worker `campus-ical`** — Workers + Static Assets (`docs/`, `wrangler.jsonc`), 도메인 campus-cal.com | 같은 워커가 정적 자산 서빙 + 위 `/calendar`·`/stats`·`/copy`를 Edge Function으로 프록시. **Pages 아님** |
 | 크롤러 cron (전 학교) | **mac mini** launchd (`ops/mac-cron`, 매일 03:00) | Docker 컨테이너 1회 실행 → `seed_schools && update_schools`. 코드 갱신은 mac mini에서 수동 `git pull && docker build` 필요 (자동 deploy 아님) |
 
 ## 코드/기술 제약
 
 - **가천대 SSL handshake**: 가천대 서버가 약한 cipher만 받음. Python은 `LegacyTLSAdapter` + SECLEVEL=1 로 우회. Deno fetch (Edge Function)는 우회 불가 → Selenium 또는 Python `requests` (특수 어댑터)만 가능
-- **Supabase는 HTML/JS 정적 frontend 호스팅 용도가 아님** (★중요): Supabase 공식 docs (Storage Quickstart): "For security, HTML files are returned as plain text." Edge Function/Storage public 모두 HTML/JS 응답을 강제로 `content-type: text/plain` + `nosniff` + sandbox CSP로 변환. anon key 인증, Custom Domain 모두 우회 불가. 미디어(image/gif/video)는 정상 서빙. → **정적 HTML은 Cloudflare Pages 같은 외부 호스팅**, iCal endpoint(캘린더 앱이 fetch — brower quirk 영향 없음)만 Supabase Edge Function 유지
-- **GitHub Pages URL은 작동하지 않음** (사용자 명시). 사용 호스팅: **Cloudflare Pages** (무료 *.pages.dev)
+- **Supabase는 HTML/JS 정적 frontend 호스팅 용도가 아님** (★중요): Supabase 공식 docs (Storage Quickstart): "For security, HTML files are returned as plain text." Edge Function/Storage public 모두 HTML/JS 응답을 강제로 `content-type: text/plain` + `nosniff` + sandbox CSP로 변환. anon key 인증, Custom Domain 모두 우회 불가. 미디어(image/gif/video)는 정상 서빙. → **정적 HTML은 Cloudflare Worker(Static Assets)가 서빙**, iCal/통계/복사 endpoint(캘린더 앱·프론트가 fetch — browser quirk 영향 없음)만 Supabase Edge Function이 처리(워커가 프록시)
+- **GitHub Pages URL은 작동하지 않음** (사용자 명시). 사용 호스팅: **Cloudflare Workers + Static Assets** (단일 워커 `campus-ical`, 커스텀 도메인 campus-cal.com — `*.pages.dev` Pages 아님)
 - 로고는 jsDelivr CDN(`cdn.jsdelivr.net/gh/JIM00N/campus-ical@main/...`)으로 link
 
 ## UI 패턴
@@ -61,7 +61,15 @@
 - Supabase: 프로젝트 생성, DB password reset, RLS 정책 변경 권한
 - mac mini cron: 코드 머지 후 mac mini에서 `git pull && docker build -t campus-ical-cron:local .` 후 다음 03:00 자동 실행 또는 `ops/mac-cron/run.sh`로 즉시 실행 (학교/일정 DB 반영)
 - 후이즈: DNS nameserver 변경
-- Cloudflare: 도메인 등록, Worker 작성
+- Cloudflare: 도메인 등록, Worker 라우트(campus-cal.com) 설정
 - GitHub: 머지 (자가 머지 금지)
+
+### ★ 운영 배포는 머지로 자동 안 됨 — 수동 필요 (2026-05-30 확인)
+
+PR 머지는 Supabase **preview branch**만 갱신하고, 운영엔 아무것도 자동 배포되지 않는다 (배포 CI 없음). Edge Function 코드·`supabase/migrations/`·`docs/`·`worker/`를 건드린 PR은 **머지 후 아래를 직접 실행**해야 반영됨:
+
+- **Cloudflare (프론트 `docs/` + 워커 `worker/`)**: repo root에서 `npx wrangler deploy` (`wrangler login` 필요 — Worker+Static Assets 한 번에 배포)
+- **Supabase Edge Function `web`**: `supabase functions deploy web --project-ref rhjovcmtvzhqublrqxic` (CLI는 access token으로 이미 인증됨, `link` 불필요)
+- **운영 마이그레이션**: 대시보드 SQL Editor에 마이그레이션 SQL 실행이 가장 빠름 (운영 DB 비번은 mac mini `ops/mac-cron/.env`에만 있고 repo `.env`는 localhost). 또는 Session pooler URL로 `supabase db push --db-url …`
 
 ## 작업 history는 [session-log.md](session-log.md) 참조
