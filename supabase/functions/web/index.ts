@@ -40,22 +40,25 @@ Deno.serve(async (req) => {
   try {
     if (path === "/healthz") return jsonResp({ ok: true });
 
-    // /stats — 누적 통계: 학교 수 + 전체 URL 복사 횟수
+    // /stats — 누적 통계: 학교 수 + 전체 URL 복사 횟수 + 학교별 순위(복사 많은 순)
     if (path === "/stats") {
-      const { count: schoolsCount, error: e1 } = await sb
-        .from("schools").select("id", { count: "exact", head: true });
-      if (e1) throw e1;
+      const { data: rows, error } = await sb
+        .from("schools").select("name, slug, copy_count")
+        .order("copy_count", { ascending: false });
+      if (error) throw error;
 
-      const { data: rows, error: e2 } = await sb
-        .from("schools").select("copy_count");
-      if (e2) throw e2;
-
-      const copies = (rows ?? []).reduce(
-        (acc: number, r: { copy_count: number | null }) =>
-          acc + Number(r.copy_count ?? 0),
+      const ranking = (rows ?? []).map(
+        (r: { name: string; slug: string; copy_count: number | null }) => ({
+          name: r.name,
+          slug: r.slug,
+          copies: Number(r.copy_count ?? 0),
+        }),
+      );
+      const copies = ranking.reduce(
+        (acc: number, r: { copies: number }) => acc + r.copies,
         0,
       );
-      return jsonResp({ schools: schoolsCount ?? 0, copies });
+      return jsonResp({ schools: ranking.length, copies, ranking });
     }
 
     // POST /copy/{slug} — URL 복사 버튼 클릭 1회 기록 (학교별 copy_count++).
