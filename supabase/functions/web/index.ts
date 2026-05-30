@@ -14,7 +14,7 @@ const sb = createClient(SUPABASE_URL, SERVICE_KEY);
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, OPTIONS",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
 };
 
 const jsonResp = (data: unknown, status = 200) =>
@@ -26,6 +26,10 @@ const jsonResp = (data: unknown, status = 200) =>
 Deno.serve(async (req) => {
   const url = new URL(req.url);
 
+  if (req.method === "OPTIONS") {
+    return new Response(null, { status: 204, headers: CORS_HEADERS });
+  }
+
   // /functions/v1/web 또는 /web prefix stripping.
   let path = url.pathname;
   for (const prefix of ["/functions/v1/web", "/web"]) {
@@ -36,22 +40,40 @@ Deno.serve(async (req) => {
   try {
     if (path === "/healthz") return jsonResp({ ok: true });
 
-    // /stats — 누적 통계: 학교 수 + 전체 ICS fetch 횟수
+    // /stats — 누적 통계: 학교 수 + 전체 URL 복사 횟수
     if (path === "/stats") {
       const { count: schoolsCount, error: e1 } = await sb
         .from("schools").select("id", { count: "exact", head: true });
       if (e1) throw e1;
 
       const { data: rows, error: e2 } = await sb
-        .from("schools").select("fetch_count");
+        .from("schools").select("copy_count");
       if (e2) throw e2;
 
-      const subscriptions = (rows ?? []).reduce(
-        (acc: number, r: { fetch_count: number | null }) =>
-          acc + Number(r.fetch_count ?? 0),
+      const copies = (rows ?? []).reduce(
+        (acc: number, r: { copy_count: number | null }) =>
+          acc + Number(r.copy_count ?? 0),
         0,
       );
-      return jsonResp({ schools: schoolsCount ?? 0, subscriptions });
+      return jsonResp({ schools: schoolsCount ?? 0, copies });
+    }
+
+    // POST /copy/{slug} — URL 복사 버튼 클릭 1회 기록 (학교별 copy_count++).
+    const copyMatch = path.match(/^\/copy\/([a-z0-9-]+)$/);
+    if (copyMatch) {
+      if (req.method !== "POST") {
+        return jsonResp({ error: "method not allowed" }, 405);
+      }
+      const { data: school, error: e1 } = await sb
+        .from("schools").select("id").eq("slug", copyMatch[1]).maybeSingle();
+      if (e1) throw e1;
+      if (!school) return jsonResp({ error: "school not found" }, 404);
+
+      const { error: e2 } = await sb.rpc("increment_school_copy", {
+        s_id: school.id,
+      });
+      if (e2) throw e2;
+      return jsonResp({ ok: true });
     }
 
     // /calendar/{slug}.ics
