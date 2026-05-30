@@ -1,7 +1,7 @@
 // 모든 페이지 공통 인터랙션 + 학교 페이지 전용 로직.
 // - 모든 페이지: .js-share-btn 클릭 처리(Web Share API + fallback)
-// - index 페이지: #statsSchools / #statsSyncs 가 있으면 /stats fetch
-// - 학교 페이지: 카테고리/엔드포인트 토글, URL 복사, #howRoot 에 캘린더 등록 가이드 렌더
+// - index 페이지: #statsSchools / #statsCopies 가 있으면 /stats fetch
+// - 학교 페이지: 카테고리/엔드포인트 토글, URL 복사(+ /copy/{slug} 기록), #howRoot 가이드 렌더
 (function () {
   // ────────────────────────────────────────────────────────────
   // 1) 공유 버튼 — Web Share API 우선, 데스크톱은 URL 복사 fallback
@@ -33,8 +33,8 @@
   // 2) 누적 통계 (index 페이지만)
   // ────────────────────────────────────────────────────────────
   var statsSchools = document.getElementById('statsSchools');
-  var statsSyncs = document.getElementById('statsSyncs');
-  if (statsSchools || statsSyncs) {
+  var statsCopies = document.getElementById('statsCopies');
+  if (statsSchools || statsCopies) {
     fetch('/stats', { method: 'GET' })
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (data) {
@@ -42,8 +42,8 @@
         if (statsSchools && typeof data.schools === 'number') {
           statsSchools.textContent = data.schools.toLocaleString('ko-KR');
         }
-        if (statsSyncs && typeof data.subscriptions === 'number') {
-          statsSyncs.textContent = data.subscriptions.toLocaleString('ko-KR');
+        if (statsCopies && typeof data.copies === 'number') {
+          statsCopies.textContent = data.copies.toLocaleString('ko-KR');
         }
       })
       .catch(function () { /* 조용히 실패 — 기본값 유지 */ });
@@ -56,6 +56,8 @@
   if (!icalInput) return;
 
   var baseUrl = icalInput.value;
+  var slugMatch = baseUrl.match(/\/calendar\/([a-z0-9-]+)\.ics/);
+  var schoolSlug = slugMatch ? slugMatch[1] : null;
   var subscribeBtn = document.getElementById('subscribeBtn');
   var categoriesBox = document.querySelector('.categories');
   var modeRadios = document.querySelectorAll('input[name="mode"]');
@@ -107,6 +109,11 @@
     }
     status.textContent = '✓ URL이 복사되었습니다';
     status.className = 'copy-status ok';
+    // 학교별 복사 횟수 기록 (fire-and-forget; 실패해도 무시).
+    if (schoolSlug) {
+      fetch('/copy/' + schoolSlug, { method: 'POST', keepalive: true })
+        .catch(function () {});
+    }
   });
 
   // ────────────────────────────────────────────────────────────
