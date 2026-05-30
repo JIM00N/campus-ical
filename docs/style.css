@@ -140,6 +140,8 @@ body {
 .side-cta__hint {
   font-size: 11px; color: #9ca3af; margin: 10px 0 0; line-height: 1.4;
 }
+/* 오른쪽 사이드 레일의 광고 유닛 (공유 CTA 아래). 레일이 160px라 폭 좁음 — Multiplex 충진 제한 가능 */
+.side-ad__unit { margin-top: 16px; width: 160px; }
 
 /* ── 통계 카운터 ───────────────────────── */
 .stats {
