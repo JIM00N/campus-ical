@@ -45,8 +45,49 @@
         if (statsCopies && typeof data.copies === 'number') {
           statsCopies.textContent = data.copies.toLocaleString('ko-KR');
         }
+        if (Array.isArray(data.ranking)) renderRanking(data.ranking);
       })
       .catch(function () { /* 조용히 실패 — 기본값 유지 */ });
+  }
+
+  // 학교별 인기 순위 — 도넛(conic-gradient) + 등수 리스트. 복사 0건이면 섹션 숨김 유지.
+  function renderRanking(ranking) {
+    var section = document.getElementById('rankingSection');
+    var chart = document.getElementById('rankingChart');
+    var list = document.getElementById('rankingList');
+    if (!section || !chart || !list) return;
+    var ranked = ranking.filter(function (r) { return r && r.copies > 0; });
+    var total = ranked.reduce(function (a, r) { return a + r.copies; }, 0);
+    if (total === 0) return;
+    var palette = ['#2563eb', '#f59e0b', '#10b981', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
+    var medals = ['🥇', '🥈', '🥉'];
+    var acc = 0, stops = [], rows = '';
+    for (var i = 0; i < ranked.length; i++) {
+      var color = palette[i % palette.length];
+      var start = (acc / total) * 100;
+      acc += ranked[i].copies;
+      var end = (acc / total) * 100;
+      stops.push(color + ' ' + start.toFixed(2) + '% ' + end.toFixed(2) + '%');
+      var pct = Math.round((ranked[i].copies / total) * 100);
+      var rank = i < 3 ? medals[i] : (i + 1) + '위';
+      rows += '<li>'
+        + '<span class="ranking__rank">' + rank + '</span>'
+        + '<span class="ranking__dot" style="background:' + color + '"></span>'
+        + '<span class="ranking__name">' + escapeHtml(ranked[i].name) + '</span>'
+        + '<span class="ranking__count">' + ranked[i].copies.toLocaleString('ko-KR') + '회 · ' + pct + '%</span>'
+        + '</li>';
+    }
+    chart.style.background = 'conic-gradient(' + stops.join(', ') + ')';
+    list.innerHTML = rows;
+    var totalEl = document.getElementById('rankingTotal');
+    if (totalEl) totalEl.textContent = total.toLocaleString('ko-KR');
+    section.hidden = false;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
   }
 
   // ────────────────────────────────────────────────────────────

@@ -158,6 +158,47 @@ body {
 }
 .stats-item span { font-size: 13px; color: #6b7280; }
 
+/* ── 인기 학교 순위 (도넛 + 등수) ───────────────────────── */
+.ranking {
+  margin-top: 24px; padding: 24px;
+  background: white; border: 1px solid #e5e7eb; border-radius: 14px;
+}
+.ranking h2 { font-size: 18px; margin: 0 0 4px; color: #111827; }
+.ranking__sub { font-size: 13px; color: #9ca3af; margin: 0 0 20px; }
+.ranking__body {
+  display: flex; gap: 28px; align-items: center;
+  flex-wrap: wrap; justify-content: center;
+}
+.ranking__chart {
+  position: relative; width: 180px; height: 180px;
+  border-radius: 50%; flex-shrink: 0; background: #f3f4f6;
+}
+.ranking__center {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 108px; height: 108px; border-radius: 50%; background: white;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.ranking__center strong { font-size: 24px; color: #111827; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.ranking__center span { font-size: 12px; color: #6b7280; }
+.ranking__list { list-style: none; margin: 0; padding: 0; flex: 1 1 260px; min-width: 0; }
+.ranking__list li {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 0; border-bottom: 1px solid #f3f4f6; font-size: 14px;
+}
+.ranking__list li:last-child { border-bottom: none; }
+.ranking__rank { width: 30px; text-align: center; font-weight: 700; flex-shrink: 0; }
+.ranking__dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+.ranking__name {
+  flex: 1; min-width: 0; color: #111827; font-weight: 500;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ranking__count { color: #6b7280; font-variant-numeric: tabular-nums; flex-shrink: 0; white-space: nowrap; }
+@media (max-width: 560px) {
+  .ranking__body { flex-direction: column; gap: 18px; }
+  .ranking__list { width: 100%; flex: none; }
+}
+
 /* ── 학교 신청 카드 (school-grid 내) ───────────────────────── */
 .school-card--request {
   background: #eff6ff; border-color: #bfdbfe;
