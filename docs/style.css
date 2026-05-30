@@ -141,6 +141,21 @@ body {
   font-size: 11px; color: #9ca3af; margin: 10px 0 0; line-height: 1.4;
 }
 
+/* ── 통계 카운터 ───────────────────────── */
+.stats {
+  display: flex; gap: 32px; justify-content: center;
+  margin: 24px 0 0; padding: 20px;
+  background: white; border: 1px solid #e5e7eb; border-radius: 14px;
+}
+.stats-item {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.stats-item strong {
+  font-size: 26px; color: #2563eb; font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.stats-item span { font-size: 13px; color: #6b7280; }
+
 /* ── 학교 신청 카드 (school-grid 내) ───────────────────────── */
 .school-card--request {
   background: #eff6ff; border-color: #bfdbfe;
