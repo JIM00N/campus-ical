@@ -228,6 +228,62 @@
   }
 
   // ────────────────────────────────────────────────────────────
+  // 2.6) 전국 비교 (메인) — 모든 학교 .ics를 파싱해 방학·시험 순위
+  // ────────────────────────────────────────────────────────────
+  var compareSection = document.getElementById('compareSection');
+  if (compareSection) renderCompare(compareSection);
+
+  function renderCompare(section) {
+    var cards = document.querySelectorAll('.school-card[href^="s/"]');
+    var schools = [];
+    for (var i = 0; i < cards.length; i++) {
+      var m = cards[i].getAttribute('href').match(/s\/([a-z0-9-]+)\.html/);
+      if (m) schools.push({ slug: m[1], name: (cards[i].textContent || '').trim() });
+    }
+    if (!schools.length) return;
+    Promise.all(schools.map(function (s) {
+      return fetch('/calendar/' + s.slug + '.ics')
+        .then(function (r) { return r.ok ? r.text() : ''; })
+        .then(function (t) { return { name: s.name, events: t ? parseIcs(t) : [] }; })
+        .catch(function () { return { name: s.name, events: [] }; });
+    })).then(function (all) {
+      var today = startOfToday();
+      var vac = [], exam = [];
+      all.forEach(function (sc) {
+        var v = sc.events.filter(function (e) { return /방학|휴가/.test(e.summary) && e.start >= today; })
+          .sort(function (a, b) { return a.start - b.start; })[0];
+        if (v) vac.push({ name: sc.name, date: v.start });
+        var x = sc.events.filter(function (e) { return /시험|고사/.test(e.summary) && e.end > today; })
+          .sort(function (a, b) { return a.start - b.start; })[0];
+        if (x) exam.push({ name: sc.name, date: x.start });
+      });
+      vac.sort(function (a, b) { return a.date - b.date; });
+      exam.sort(function (a, b) { return a.date - b.date; });
+      var html = '';
+      if (vac.length) html += compareCard('🏖️ 방학이 가장 빠른 학교', vac, today, 'date');
+      if (exam.length) html += compareCard('📝 시험이 가장 임박한 학교', exam, today, 'dday');
+      if (!html) return;
+      section.innerHTML = '<h2 class="compare__heading">🏫 전국 비교</h2><div class="compare__grid">' + html + '</div>';
+      section.hidden = false;
+    }).catch(function () { /* 조용히 실패 */ });
+  }
+  function compareCard(title, items, today, mode) {
+    var rows = '';
+    for (var i = 0; i < items.length && i < 5; i++) {
+      var rank = i < 3 ? ['🥇', '🥈', '🥉'][i] : (i + 1) + '';
+      var val = mode === 'dday' ? ddayLabel(items[i].date, today) : fmtMD(items[i].date);
+      rows += '<li><span class="compare__rank">' + rank + '</span>'
+        + '<span class="compare__name">' + escapeHtml(items[i].name) + '</span>'
+        + '<span class="compare__val">' + val + '</span></li>';
+    }
+    return '<div class="compare__card"><h3 class="compare__title">' + title + '</h3><ol class="compare__list">' + rows + '</ol></div>';
+  }
+  function ddayLabel(date, today) {
+    var dd = Math.round((date - today) / 86400000);
+    return dd > 0 ? 'D-' + dd : (dd === 0 ? 'D-DAY' : '진행중');
+  }
+
+  // ────────────────────────────────────────────────────────────
   // 3) 학교 페이지 전용 (#icalUrl 없으면 종료)
   // ────────────────────────────────────────────────────────────
   var icalInput = document.getElementById('icalUrl');
