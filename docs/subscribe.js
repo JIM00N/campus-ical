@@ -1,5 +1,6 @@
 // 모든 페이지 공통 인터랙션 + 학교 페이지 전용 로직.
 // - 모든 페이지: .js-share-btn 클릭 처리(Web Share API + fallback)
+// - index 페이지: #statsSchools / #statsSyncs 가 있으면 /stats fetch
 // - 학교 페이지: 카테고리/엔드포인트 토글, URL 복사, #howRoot 에 캘린더 등록 가이드 렌더
 (function () {
   // ────────────────────────────────────────────────────────────
@@ -29,7 +30,27 @@
   }
 
   // ────────────────────────────────────────────────────────────
-  // 2) 학교 페이지 전용 (#icalUrl 없으면 종료)
+  // 2) 누적 통계 (index 페이지만)
+  // ────────────────────────────────────────────────────────────
+  var statsSchools = document.getElementById('statsSchools');
+  var statsSyncs = document.getElementById('statsSyncs');
+  if (statsSchools || statsSyncs) {
+    fetch('/stats', { method: 'GET' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) {
+        if (!data) return;
+        if (statsSchools && typeof data.schools === 'number') {
+          statsSchools.textContent = data.schools.toLocaleString('ko-KR');
+        }
+        if (statsSyncs && typeof data.subscriptions === 'number') {
+          statsSyncs.textContent = data.subscriptions.toLocaleString('ko-KR');
+        }
+      })
+      .catch(function () { /* 조용히 실패 — 기본값 유지 */ });
+  }
+
+  // ────────────────────────────────────────────────────────────
+  // 3) 학교 페이지 전용 (#icalUrl 없으면 종료)
   // ────────────────────────────────────────────────────────────
   var icalInput = document.getElementById('icalUrl');
   if (!icalInput) return;
@@ -89,7 +110,7 @@
   });
 
   // ────────────────────────────────────────────────────────────
-  // 3) 캘린더 앱 등록 가이드 (#howRoot 가 있을 때만)
+  // 4) 캘린더 앱 등록 가이드 (#howRoot 가 있을 때만)
   //    안드로이드(Google Calendar 모바일 앱 한계)를 가장 위에 강조.
   // ────────────────────────────────────────────────────────────
   var howRoot = document.getElementById('howRoot');
