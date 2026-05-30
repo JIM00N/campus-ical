@@ -76,13 +76,7 @@ crossorigin="anonymous"></script>
 
 <section class="changelog">
 <h2>📋 업데이트 내역</h2>
-<ul class="changelog-list">
-<li><time>2026-05-30</time><span>캘린더 앱별 구독 가이드를 대폭 보강했습니다. 안드로이드(구글 캘린더 모바일 앱에서는 구독 추가가 막혀 PC나 브라우저로 등록해야 하는 점), 아이폰·아이패드, 맥, Outlook까지 단계별로 안내합니다. 친구에게 공유하기·내 학교 신청하기 버튼도 추가했습니다.</span></li>
-<li><time>2026-05-30</time><span>메인에 'URL 복사 횟수' 통계를 표시합니다 — 학교별로 캘린더 주소가 몇 번 복사됐는지 모아서 보여줍니다. 모바일에서 신청·공유 버튼이 가려지던 문제도 함께 고쳤습니다.</span></li>
-<li><time>2026-05-29</time><span>지원 학교를 6곳으로 늘렸습니다 — 서울대·고려대·한국체육대·한림대를 추가하고, 각 학교의 공식 로고를 적용했습니다.</span></li>
-<li><time>2026-05-28</time><span>원하는 일정만 골라 받는 카테고리 필터를 추가했습니다('시험만', '등록기간만' 등). 여러 날에 걸친 일정을 시작일·종료일 두 개의 표시로만 정리하는 '시작·끝만 표시' 토글도 생겼습니다.</span></li>
-<li><time>2026-05-27</time><span>iCal 구독 서비스를 열었습니다. 가천대·동서울대 학사일정을 개인 캘린더 앱(구글·애플·아웃룩 등)에서 자동으로 받아볼 수 있습니다.</span></li>
-</ul>
+<ul class="changelog-list" id="changelogList"></ul>
 </section>
 
 <section class="mobile-ctas" aria-label="모바일 CTA">
@@ -124,6 +118,20 @@ crossorigin="anonymous"></script>
 <p>학사일정은 각 학교 공식 사이트에서 매일 자동으로 동기화됩니다. 일정이 변경되면 캘린더에도 반영됩니다.</p>
 <p class="footer-email">문의: jimoon4b@gmail.com</p>
 </footer>
+
+<div class="cl-modal" id="changelogModal" hidden>
+<div class="cl-modal__backdrop" data-close></div>
+<div class="cl-modal__panel" role="dialog" aria-modal="true" aria-labelledby="clModalTitle">
+<button class="cl-modal__close" type="button" data-close aria-label="닫기">×</button>
+<time class="cl-modal__date" id="clModalDate"></time>
+<h3 class="cl-modal__title" id="clModalTitle"></h3>
+<div class="cl-modal__body" id="clModalBody"></div>
+<nav class="cl-modal__nav" aria-label="글 이동">
+<button class="cl-modal__navbtn cl-modal__prev" id="clPrev" type="button" hidden></button>
+<button class="cl-modal__navbtn cl-modal__next" id="clNext" type="button" hidden></button>
+</nav>
+</div>
+</div>
 
 <script>
 (function(){

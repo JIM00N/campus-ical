@@ -91,6 +91,143 @@
   }
 
   // ────────────────────────────────────────────────────────────
+  // 2.5) 업데이트 내역 — 간단 목록 + 클릭 시 상세 모달(이전/다음 글 이동)
+  // ────────────────────────────────────────────────────────────
+  var clListEl = document.getElementById('changelogList');
+  if (clListEl) initChangelog(clListEl);
+
+  function initChangelog(listEl) {
+    // 목록엔 date+title만, 상세(모달)엔 body. 최신 글이 위(index 0).
+    var entries = [
+      {
+        date: '2026-05-30',
+        title: '구독 가이드 보강 · 공유/신청 버튼 추가',
+        body: '<p>캘린더 앱마다 구독 추가 방법이 달라, 앱별 단계별 가이드를 새로 정리했습니다.</p>'
+          + '<ul>'
+          + '<li><strong>안드로이드</strong> — 구글 캘린더 <em>모바일 앱</em>에서는 구독 추가가 막혀 있습니다. PC나 폰 <em>브라우저</em>로 Google Calendar에 추가하면 앱에도 자동 동기화됩니다. 삼성 캘린더 연동도 안내합니다.</li>'
+          + '<li><strong>아이폰·아이패드</strong> — “캘린더 앱으로 바로 추가” 버튼 한 번, 또는 설정 → 캘린더에서 구독 추가.</li>'
+          + '<li><strong>맥</strong> — 캘린더 앱 → 파일 → 새로운 구독 캘린더.</li>'
+          + '<li><strong>Outlook(웹)</strong> — 캘린더 추가 → 웹에서 구독.</li>'
+          + '</ul>'
+          + '<p>또한 “친구에게 공유하기”·“내 학교 신청하기” 버튼을 추가했습니다.</p>'
+      },
+      {
+        date: '2026-05-30',
+        title: 'URL 복사 횟수 통계 · 모바일 버튼 수정',
+        body: '<p>메인에 학교별로 캘린더 주소가 몇 번 복사됐는지 집계한 ‘URL 복사 횟수’ 통계를 추가했습니다.</p>'
+          + '<p>또한 모바일 화면에서 ‘학교 신청’·‘공유’ 버튼이 가려지던 문제를 수정했습니다.</p>'
+      },
+      {
+        date: '2026-05-29',
+        title: '지원 학교 6곳으로 확대 · 공식 로고 적용',
+        body: '<p>서울대학교·고려대학교·한국체육대학교·한림대학교를 추가해 총 6개교를 지원합니다.</p>'
+          + '<p>각 학교의 공식 로고도 적용했습니다.</p>'
+      },
+      {
+        date: '2026-05-28',
+        title: '카테고리 필터 · ‘시작·끝만 표시’ 토글',
+        body: '<p>‘시험만’, ‘등록기간만’처럼 원하는 종류의 일정만 골라서 구독할 수 있는 카테고리 필터를 추가했습니다.</p>'
+          + '<p>여러 날에 걸친 일정을 시작일·종료일 두 개의 하루짜리 표시로만 정리하는 ‘시작·끝만 표시’ 토글도 생겼습니다. 일정이 많아 캘린더가 복잡할 때 유용합니다.</p>'
+      },
+      {
+        date: '2026-05-27',
+        title: 'iCal 구독 서비스 오픈 (가천대·동서울대)',
+        body: '<p>대학 학사일정을 개인 캘린더 앱에서 자동으로 받아보는 iCal 구독 서비스를 열었습니다.</p>'
+          + '<p>가천대학교·동서울대학교부터 시작하며, 구글·애플·아웃룩 등 주요 캘린더 앱에서 구독할 수 있습니다.</p>'
+      }
+    ];
+
+    var modal = document.getElementById('changelogModal');
+    var mDate = document.getElementById('clModalDate');
+    var mTitle = document.getElementById('clModalTitle');
+    var mBody = document.getElementById('clModalBody');
+    var mPrev = document.getElementById('clPrev');
+    var mNext = document.getElementById('clNext');
+    var lastFocus = null;
+
+    // 목록은 최근 STEP개만 노출, '더보기'로 오래된 항목 펼침 (무한 증가 방지)
+    var STEP = 4;
+    var shown = Math.min(STEP, entries.length);
+    var moreBtn = document.createElement('button');
+    moreBtn.type = 'button';
+    moreBtn.className = 'changelog-more';
+    moreBtn.textContent = '더보기';
+    if (listEl.parentNode) listEl.parentNode.insertBefore(moreBtn, listEl.nextSibling);
+
+    function renderList() {
+      var html = '';
+      for (var i = 0; i < shown; i++) {
+        html += '<li><button type="button" class="cl-item" data-i="' + i + '">'
+          + '<time>' + entries[i].date + '</time>'
+          + '<span class="cl-item__title"></span>'
+          + '<span class="cl-item__arrow" aria-hidden="true">›</span>'
+          + '</button></li>';
+      }
+      listEl.innerHTML = html;
+      var titleEls = listEl.querySelectorAll('.cl-item__title');
+      for (var t = 0; t < titleEls.length; t++) titleEls[t].textContent = entries[t].title;
+      moreBtn.hidden = shown >= entries.length;
+    }
+    moreBtn.addEventListener('click', function () {
+      shown = Math.min(shown + STEP, entries.length);
+      renderList();
+    });
+    renderList();
+
+    function setNav(btn, idx, label) {
+      if (idx >= 0 && idx < entries.length) {
+        btn.hidden = false;
+        btn.setAttribute('data-i', idx);
+        btn.innerHTML = '<span class="cl-nav__label">' + label + '</span><span class="cl-nav__title"></span>';
+        btn.querySelector('.cl-nav__title').textContent = entries[idx].title;
+      } else {
+        btn.hidden = true;
+      }
+    }
+    function openEntry(i) {
+      if (!modal || i < 0 || i >= entries.length) return;
+      var e = entries[i];
+      mDate.textContent = e.date;
+      mTitle.textContent = e.title;
+      mBody.innerHTML = e.body;
+      setNav(mPrev, i + 1, '← 이전 글'); // 이전 = 더 오래된 글
+      setNav(mNext, i - 1, '다음 글 →'); // 다음 = 더 최신 글
+      var firstOpen = modal.hidden;
+      if (firstOpen) {
+        lastFocus = document.activeElement;
+        modal.hidden = false;
+        document.body.style.overflow = 'hidden';
+      }
+      modal.querySelector('.cl-modal__panel').scrollTop = 0;
+      modal.querySelector('.cl-modal__close').focus();
+    }
+    function closeModal() {
+      if (!modal || modal.hidden) return;
+      modal.hidden = true;
+      document.body.style.overflow = '';
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+
+    listEl.addEventListener('click', function (ev) {
+      var b = ev.target.closest('.cl-item');
+      if (b) openEntry(Number(b.getAttribute('data-i')));
+    });
+    if (modal) {
+      mPrev.addEventListener('click', function () { openEntry(Number(mPrev.getAttribute('data-i'))); });
+      mNext.addEventListener('click', function () { openEntry(Number(mNext.getAttribute('data-i'))); });
+      modal.addEventListener('click', function (ev) {
+        if (ev.target.hasAttribute('data-close')) closeModal();
+      });
+      document.addEventListener('keydown', function (ev) {
+        if (modal.hidden) return;
+        if (ev.key === 'Escape') closeModal();
+        else if (ev.key === 'ArrowLeft' && !mPrev.hidden) openEntry(Number(mPrev.getAttribute('data-i')));
+        else if (ev.key === 'ArrowRight' && !mNext.hidden) openEntry(Number(mNext.getAttribute('data-i')));
+      });
+    }
+  }
+
+  // ────────────────────────────────────────────────────────────
   // 3) 학교 페이지 전용 (#icalUrl 없으면 종료)
   // ────────────────────────────────────────────────────────────
   var icalInput = document.getElementById('icalUrl');
