@@ -381,3 +381,16 @@ body {
 
 .footer { padding: 24px; text-align: center; color: #9ca3af; font-size: 13px; }
 .footer-email { margin-top: 6px; }
+.footer-links { margin: 8px 0 0; font-size: 13px; }
+.footer-links a { color: #6b7280; text-decoration: none; }
+.footer-links a:hover { color: #2563eb; text-decoration: underline; }
+
+/* ── 콘텐츠 페이지 (FAQ / 개인정보처리방침) ───────────────────────── */
+.page-title { font-size: 24px; margin: 0 0 8px; color: #111827; }
+.page-lead { color: #4b5563; margin: 0 0 24px; line-height: 1.6; }
+.how-platform p:not(.how-warn):not(.how-tip) { font-size: 13px; color: #4b5563; margin: 10px 0 0; line-height: 1.6; }
+.legal h2 { font-size: 17px; margin: 28px 0 10px; color: #111827; }
+.legal ul { color: #374151; line-height: 1.7; padding-left: 20px; margin: 0 0 12px; }
+.legal li { margin-bottom: 6px; }
+.legal a { color: #2563eb; }
+.legal-date { color: #9ca3af; font-size: 13px; margin-top: 28px; }
