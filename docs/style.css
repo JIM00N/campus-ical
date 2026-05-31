@@ -394,3 +394,28 @@ body {
 .legal li { margin-bottom: 6px; }
 .legal a { color: #2563eb; }
 .legal-date { color: #9ca3af; font-size: 13px; margin-top: 28px; }
+
+/* ── 블로그 ───────────────────────── */
+.blog-list { list-style: none; margin: 0; padding: 0; }
+.blog-card {
+  display: block; padding: 20px; margin-bottom: 16px;
+  background: white; border: 1px solid #e5e7eb; border-radius: 14px;
+  text-decoration: none; color: inherit; transition: box-shadow 0.15s, transform 0.15s;
+}
+.blog-card:hover { box-shadow: 0 6px 18px rgba(15,23,42,0.08); transform: translateY(-2px); }
+.blog-card time { font-size: 13px; color: #9ca3af; font-variant-numeric: tabular-nums; }
+.blog-card h2 { font-size: 18px; margin: 6px 0 8px; color: #111827; }
+.blog-card p { font-size: 14px; color: #4b5563; margin: 0; line-height: 1.6; }
+.article__back { margin: 0 0 16px; }
+.article__back a { color: #6b7280; text-decoration: none; font-size: 14px; }
+.article__back a:hover { color: #2563eb; }
+.article__title { font-size: 26px; line-height: 1.35; margin: 0 0 6px; color: #111827; }
+.article__date { display: block; font-size: 13px; color: #9ca3af; margin-bottom: 24px; font-variant-numeric: tabular-nums; }
+.article p:not(.article__back):not(.article__cta) { color: #374151; line-height: 1.8; margin: 0 0 16px; }
+.article h2 { font-size: 19px; margin: 28px 0 10px; color: #111827; }
+.article__cta {
+  margin-top: 32px; padding: 18px 20px; text-align: center;
+  background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px;
+}
+.article__cta a { color: #2563eb; font-weight: 700; text-decoration: none; }
+.article__cta a:hover { text-decoration: underline; }
