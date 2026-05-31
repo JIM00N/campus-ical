@@ -66,6 +66,15 @@ SCHOOLS = [
         "crawler_key": "hallym",
         "timezone": "Asia/Seoul",
     },
+    {
+        "slug": "dongguk",
+        "name": "동국대학교",
+        "name_en": "Dongguk University",
+        "logo_path": "/static/logos/dongguk.png",
+        "website": "https://www.dongguk.edu/schedule/detail",
+        "crawler_key": "dongguk",
+        "timezone": "Asia/Seoul",
+    },
 ]
 
 
