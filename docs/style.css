@@ -422,3 +422,26 @@ body {
 }
 .article__cta a { color: #2563eb; font-weight: 700; text-decoration: none; }
 .article__cta a:hover { text-decoration: underline; }
+
+/* ── 홈 블로그 카드뉴스 (가로 스크롤) ───────────────────────── */
+.blog-feature { margin-top: 24px; }
+.blog-feature__title { font-size: 18px; margin: 0 0 4px; color: #111827; }
+.blog-feature__sub { font-size: 13px; color: #9ca3af; margin: 0 0 16px; }
+.blog-cards {
+  display: flex; gap: 14px; overflow-x: auto; padding: 2px 2px 10px;
+  scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch;
+}
+.blog-news-card {
+  flex: 0 0 220px; scroll-snap-align: start;
+  display: flex; flex-direction: column; gap: 6px;
+  background: white; border: 1px solid #e5e7eb; border-radius: 14px;
+  padding: 18px; text-decoration: none; color: inherit;
+  transition: box-shadow 0.15s, transform 0.15s;
+}
+.blog-news-card:hover { box-shadow: 0 6px 18px rgba(15,23,42,0.08); transform: translateY(-2px); }
+.blog-news-card__tag {
+  align-self: flex-start; font-size: 11px; font-weight: 700;
+  color: #2563eb; background: #eff6ff; border-radius: 999px; padding: 3px 10px;
+}
+.blog-news-card strong { font-size: 15px; color: #111827; line-height: 1.4; margin-top: 2px; }
+.blog-news-card__desc { font-size: 13px; color: #6b7280; line-height: 1.5; }
