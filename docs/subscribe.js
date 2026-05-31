@@ -362,8 +362,10 @@
       .then(function (r) { return r.ok ? r.text() : null; })
       .then(function (text) {
         if (!text) return;
+        var parsed = parseIcs(text);
+        applyCategoryChips(parsed);   // 데이터 주도: 실제 등장하는 카테고리 칩만 노출
         var today = startOfToday();
-        var up = parseIcs(text)
+        var up = parsed
           .filter(function (e) { return e.end > today; })   // 아직 안 끝난 일정
           .sort(function (a, b) { return a.start - b.start; })
           .slice(0, 5);
@@ -390,6 +392,26 @@
       .catch(function () { /* 조용히 실패 */ });
   }
 
+  // 데이터 주도 카테고리 — 이 학교 .ics에 실제 등장하는 카테고리(CATEGORIES 속성)만
+  // 칩으로 노출한다. 칩 = 서버가 매긴 실제 필터 결과라, '칩은 보이는데 골라 받으면
+  // 빈 결과' 같은 모순이 구조적으로 생기지 않는다. (자퇴 일정이 없는 학교는 자퇴 칩이
+  // 자동으로 사라짐.) .ics fetch 실패 시엔 호출되지 않아 HTML의 칩 8개가 그대로 남는다.
+  function applyCategoryChips(events) {
+    if (!categoriesBox || !catBoxes.length) return;
+    var present = {}, any = false;
+    for (var i = 0; i < events.length; i++) {
+      var cs = events[i].cats || [];
+      for (var k = 0; k < cs.length; k++) { present[cs[k]] = true; any = true; }
+    }
+    // .ics에 CATEGORIES가 하나도 없으면(구버전 피드 / 배포 과도기) 필터하지 않고
+    // HTML의 칩 8개를 그대로 둔다 — 모든 칩이 사라지는 회귀를 막는다.
+    if (!any) return;
+    for (var j = 0; j < catBoxes.length; j++) {
+      var chip = catBoxes[j].closest('.category-chip');
+      if (chip) chip.hidden = !present[catBoxes[j].value];
+    }
+  }
+
   function parseIcs(text) {
     var out = [];
     var blocks = text.split('BEGIN:VEVENT');
@@ -397,12 +419,14 @@
       var sm = blocks[i].match(/\nSUMMARY:(.*)/);
       var ds = blocks[i].match(/DTSTART[^:\n]*:(\d{8})/);
       var de = blocks[i].match(/DTEND[^:\n]*:(\d{8})/);
+      var cm = blocks[i].match(/\nCATEGORIES:(.*)/);
       if (!sm || !ds) continue;
       var start = ymd(ds[1]);
       out.push({
         summary: sm[1].replace(/\\([,;\\])/g, '$1').trim(),
         start: start,
-        end: de ? ymd(de[1]) : start
+        end: de ? ymd(de[1]) : start,
+        cats: cm ? cm[1].trim().split(',').map(function (c) { return c.trim(); }).filter(Boolean) : []
       });
     }
     return out;

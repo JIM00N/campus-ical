@@ -1,5 +1,6 @@
 // iCal 직접 생성. Python ical_generator.py와 동일한 결과 형식.
 // VEVENT는 DATE 값(allday) 기준이고 DTEND는 exclusive.
+import { eventCategories } from "./categories.ts";
 
 type School = { slug: string; name: string; timezone: string };
 type Event = { summary: string; dtstart: string; dtend: string };
@@ -93,6 +94,8 @@ export async function buildCalendar(
     out(`DTSTART;VALUE=DATE:${fmtDate(ev.dtstart)}`);
     out(`DTEND;VALUE=DATE:${fmtDate(ev.dtend)}`);
     out(`DTSTAMP:${stamp}`);
+    const cats = [...eventCategories(ev.summary)].sort();
+    if (cats.length) out(`CATEGORIES:${cats.join(",")}`);
     out("END:VEVENT");
   }
 

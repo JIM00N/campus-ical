@@ -59,6 +59,7 @@ body {
 }
 .categories.disabled { opacity: 0.35; pointer-events: none; }
 .category-chip { cursor: pointer; }
+.category-chip[hidden] { display: none; }
 .category-chip input { position: absolute; opacity: 0; pointer-events: none; }
 .category-chip span {
   display: inline-block; padding: 8px 14px; border: 1px solid #d1d5db;
