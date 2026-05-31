@@ -7,6 +7,7 @@ from typing import Iterable
 
 from icalendar import Calendar, Event
 
+from app.categories import event_categories
 from app.models import Event as EventModel, School
 
 
@@ -64,6 +65,9 @@ def build_calendar(
         item.add("dtstart", ev.dtstart)
         item.add("dtend", ev.dtend)
         item.add("dtstamp", now)
+        cats = sorted(event_categories(ev.summary))
+        if cats:
+            item.add("categories", cats)
         if ev.description:
             item.add("description", ev.description)
         cal.add_component(item)
