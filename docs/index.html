@@ -10,7 +10,7 @@ crossorigin="anonymous"></script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="topbar"><a href="./" class="brand">학사일정 구독</a><nav class="topnav"><a href="/blog/">블로그</a><a href="/faq.html">이용방법</a></nav></header>
+<header class="topbar"><a href="./" class="brand">학사일정 구독</a><nav class="topnav"><a href="/blog/">업데이트 내역</a><a href="/faq.html">이용방법</a></nav></header>
 
 <aside class="side-ad side-ad--left">
 <div class="side-cta side-cta--request">
@@ -76,9 +76,21 @@ crossorigin="anonymous"></script>
 
 <section class="compare" id="compareSection" aria-label="전국 비교" hidden></section>
 
-<section class="changelog">
-<h2>📋 업데이트 내역</h2>
-<ul class="changelog-list" id="changelogList"></ul>
+<section class="blog-feature" id="blog">
+<h2 class="blog-feature__title">📝 대학생활 블로그</h2>
+<p class="blog-feature__sub">모든 대학생에게 도움 되는 꿀팁 — 학교·학과 상관없이 바로 써먹어요.</p>
+<div class="blog-cards">
+<a class="blog-news-card" href="/blog/course-registration.html"><span class="blog-news-card__tag">학사</span><strong>수강신청 망하지 않는 법</strong><span class="blog-news-card__desc">날짜·장바구니·정정 기간까지 7가지</span></a>
+<a class="blog-news-card" href="/blog/exam-study.html"><span class="blog-news-card__tag">공부</span><strong>시험공부 효율 7가지</strong><span class="blog-news-card__desc">분산학습·인출 연습으로 점수 UP</span></a>
+<a class="blog-news-card" href="/blog/assignment.html"><span class="blog-news-card__tag">공부</span><strong>과제·레포트 잘 쓰는 법</strong><span class="blog-news-card__desc">표절 안 걸리고 점수 잘 받기</span></a>
+<a class="blog-news-card" href="/blog/group-project.html"><span class="blog-news-card__tag">공부</span><strong>팀플 생존 가이드</strong><span class="blog-news-card__desc">무임승차 막고 학점 지키기</span></a>
+<a class="blog-news-card" href="/blog/presentation.html"><span class="blog-news-card__tag">공부</span><strong>발표 떨림 극복 + PPT</strong><span class="blog-news-card__desc">준비로 떨림을 줄이는 법</span></a>
+<a class="blog-news-card" href="/blog/gpa.html"><span class="blog-news-card__tag">학사</span><strong>학점(GPA) 올리는 법</strong><span class="blog-news-card__desc">재수강·성적정정·P/F 전략</span></a>
+<a class="blog-news-card" href="/blog/time-management.html"><span class="blog-news-card__tag">생활</span><strong>대학생 시간관리</strong><span class="blog-news-card__desc">일정 통합·우선순위·미루기 방지</span></a>
+<a class="blog-news-card" href="/blog/free-period.html"><span class="blog-news-card__tag">생활</span><strong>공강 200% 활용법</strong><span class="blog-news-card__desc">비는 시간을 자기계발로</span></a>
+<a class="blog-news-card" href="/blog/money.html"><span class="blog-news-card__tag">생활</span><strong>대학생 돈 관리</strong><span class="blog-news-card__desc">생활비·알바·통장 쪼개기</span></a>
+<a class="blog-news-card" href="/blog/burnout.html"><span class="blog-news-card__tag">멘탈</span><strong>번아웃·멘탈 관리</strong><span class="blog-news-card__desc">무너지지 않고 버티는 법</span></a>
+</div>
 </section>
 
 <section class="mobile-ctas" aria-label="모바일 CTA">
@@ -118,23 +130,9 @@ crossorigin="anonymous"></script>
 </aside>
 <footer class="footer">
 <p>학사일정은 각 학교 공식 사이트에서 매일 자동으로 동기화됩니다. 일정이 변경되면 캘린더에도 반영됩니다.</p>
-<p class="footer-links"><a href="/blog/">블로그</a> · <a href="/faq.html">이용방법</a> · <a href="/privacy.html">개인정보처리방침</a></p>
+<p class="footer-links"><a href="/blog/">업데이트 내역</a> · <a href="/faq.html">이용방법</a> · <a href="/privacy.html">개인정보처리방침</a></p>
 <p class="footer-email">문의: jimoon4b@gmail.com</p>
 </footer>
-
-<div class="cl-modal" id="changelogModal" hidden>
-<div class="cl-modal__backdrop" data-close></div>
-<div class="cl-modal__panel" role="dialog" aria-modal="true" aria-labelledby="clModalTitle">
-<button class="cl-modal__close" type="button" data-close aria-label="닫기">×</button>
-<time class="cl-modal__date" id="clModalDate"></time>
-<h3 class="cl-modal__title" id="clModalTitle"></h3>
-<div class="cl-modal__body" id="clModalBody"></div>
-<nav class="cl-modal__nav" aria-label="글 이동">
-<button class="cl-modal__navbtn cl-modal__prev" id="clPrev" type="button" hidden></button>
-<button class="cl-modal__navbtn cl-modal__next" id="clNext" type="button" hidden></button>
-</nav>
-</div>
-</div>
 
 <script>
 (function(){
