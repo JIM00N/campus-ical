@@ -5,8 +5,11 @@ body {
   background: #f6f7fb; color: #1f2937; line-height: 1.55;
   min-height: 100vh; display: flex; flex-direction: column;
 }
-.topbar { background: white; border-bottom: 1px solid #e5e7eb; padding: 14px 24px; }
+.topbar { background: white; border-bottom: 1px solid #e5e7eb; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .brand { font-weight: 700; color: #111827; text-decoration: none; font-size: 18px; }
+.topnav { display: flex; gap: 18px; flex-shrink: 0; }
+.topnav a { color: #4b5563; text-decoration: none; font-size: 14px; font-weight: 500; white-space: nowrap; }
+.topnav a:hover { color: #2563eb; }
 .main { flex: 1; max-width: 720px; margin: 0 auto; padding: 48px 24px; width: 100%; }
 .search-box { margin-bottom: 28px; }
 .search-box input {
