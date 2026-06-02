@@ -34,15 +34,18 @@
   // ────────────────────────────────────────────────────────────
   var statsSchools = document.getElementById('statsSchools');
   var statsCopies = document.getElementById('statsCopies');
-  if (statsSchools || statsCopies) {
+  // 지원 학교 수 = 메인 학교 카드 수(신청 카드 제외). 학교 카드만 추가하면 자동 반영된다.
+  if (statsSchools) {
+    var nSchools = document.querySelectorAll('.school-card:not(.school-card--request)').length;
+    if (nSchools) statsSchools.textContent = nSchools.toLocaleString('ko-KR');
+  }
+  // 복사 횟수·인기 순위는 운영 통계라 /stats에서 받는다.
+  if (statsCopies) {
     fetch('/stats', { method: 'GET' })
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (data) {
         if (!data) return;
-        if (statsSchools && typeof data.schools === 'number') {
-          statsSchools.textContent = data.schools.toLocaleString('ko-KR');
-        }
-        if (statsCopies && typeof data.copies === 'number') {
+        if (typeof data.copies === 'number') {
           statsCopies.textContent = data.copies.toLocaleString('ko-KR');
         }
         if (Array.isArray(data.ranking)) renderRanking(data.ranking);
@@ -99,6 +102,13 @@
   function initChangelog(listEl) {
     // 목록엔 date+title만, 상세(모달)엔 body. 최신 글이 위(index 0).
     var entries = [
+      {
+        date: '2026-06-02',
+        title: '동국대학교 추가 · 학교별 맞춤 카테고리',
+        body: '<p>동국대학교를 추가해 총 7개교를 지원합니다.</p>'
+          + '<p>이제 학교마다 실제 학사일정에 있는 종류만 ‘골라 받기’ 칩으로 보여줍니다. '
+          + '예를 들어 자퇴 일정이 없는 학교는 자퇴 칩이 자동으로 사라져, 칩을 골랐는데 일정이 하나도 안 받아지는 일이 없습니다.</p>'
+      },
       {
         date: '2026-05-30',
         title: '구독 가이드 보강 · 공유/신청 버튼 추가',

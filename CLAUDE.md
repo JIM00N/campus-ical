@@ -40,13 +40,19 @@
 
 `tuition`, `registration`, `exam`, `major-change`, `leave`, `summer`, `withdrawal`, `graduation` — 정의는 [supabase/functions/web/lib/categories.ts](supabase/functions/web/lib/categories.ts) 와 [app/categories.py](app/categories.py). 공백 무시 normalize.
 
+- **학교별 노출은 데이터 주도** (2026-06-02): ical 빌더가 매칭 카테고리를 각 VEVENT의 표준 `CATEGORIES:` 속성으로 출력하고, 프론트([docs/subscribe.js](docs/subscribe.js) `applyCategoryChips`)가 그 학교 `.ics`의 `CATEGORIES` 합집합으로 **실제 존재하는 칩만** 노출. 칩=실제 필터 결과라 "칩 보이는데 빈 결과" 모순 없음 (자퇴 없는 학교는 자퇴 칩 자동 제외). `.ics`에 `CATEGORIES`가 전혀 없으면 8칩 유지(배포 과도기 방어). **→ 학교 추가 시 카테고리 칩 수작업 불필요**
+
 ## 학교 추가 절차
 
 1. `app/crawlers/<slug>.py` 작성 (`BaseCrawler` 상속, `@register_crawler`)
 2. `app/crawlers/__init__.py` 에 import 추가
 3. `scripts/seed_schools.py` `SCHOOLS` 리스트에 한 줄
 4. `static/logos/<slug>.{png,svg}` 로고
-5. (Edge Function 측에서도 schools 테이블 select하므로 별도 작업 없음)
+5. `docs/s/<slug>.html` 학교 페이지 (기존 학교 HTML 복제 후 학교명·로고 URL(jsDelivr)·slug·`.ics` URL만 교체)
+6. `docs/index.html` `.school-grid` 에 학교 카드 한 줄 추가 — **지원 학교 수(`#statsSchools`)는 카드 수로 자동 계산되니 수동 수정 불필요** (`subscribe.js`가 `.school-card` 개수를 셈)
+7. **★ `docs/subscribe.js` `initChangelog`의 `entries` 맨 앞에 업데이트 내역 한 항목 추가 — Claude가 매번 직접 작성** (날짜·제목·`body`, "총 N개교 지원" 문구 포함)
+8. 카테고리 칩: 데이터 주도라 별도 작업 없음 (위 "카테고리" 섹션 참조)
+9. (Edge Function 측에서도 schools 테이블 select하므로 별도 작업 없음)
 
 ## PR / git 정책
 
