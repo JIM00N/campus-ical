@@ -103,6 +103,16 @@
     // 목록엔 date+title만, 상세(모달)엔 body. 최신 글이 위(index 0).
     var entries = [
       {
+        date: '2026-06-21',
+        title: '학교별 학사일정 표 · 구독 가이드 · 학사 가이드 글 추가',
+        body: '<p>각 학교 페이지에 <strong>그 학교의 2026학년도 주요 학사일정</strong>을 날짜별 표로 정리해 한눈에 볼 수 있게 했습니다. (캘린더에 구독하지 않아도 바로 확인 가능)</p>'
+          + '<ul>'
+          + '<li><strong>구독 가이드</strong> — 아이폰·구글 캘린더(안드로이드)·삼성·맥·Outlook 등 앱별 단계별 가이드 페이지를 새로 만들었습니다.</li>'
+          + '<li><strong>학사 가이드 글</strong> — 휴학·복학, 수강신청 vs 수강정정, 계절학기, 전과·복수전공, 졸업요건, 등록금 납부 등 꼭 알아야 할 학사행정 글을 추가했습니다.</li>'
+          + '<li><strong>소개·데이터 출처</strong> 페이지를 추가해, 일정을 어디서 어떻게 수집하는지 투명하게 공개합니다.</li>'
+          + '</ul>'
+      },
+      {
         date: '2026-06-02',
         title: '동국대학교 추가 · 학교별 맞춤 카테고리',
         body: '<p>동국대학교를 추가해 총 7개교를 지원합니다.</p>'
@@ -353,10 +363,18 @@
     }
     status.textContent = '✓ URL이 복사되었습니다';
     status.className = 'copy-status ok';
-    // 학교별 복사 횟수 기록 (fire-and-forget; 실패해도 무시).
+    // 학교별 복사 횟수 기록 — 한 사람(브라우저)당 학교별 1회만 집계.
+    // 같은 사람이 여러 번 복사해도 카운트가 부풀지 않도록 localStorage로 중복 제거.
+    // (fire-and-forget; 실패해도 무시. localStorage 차단 환경이면 매번 집계로 graceful degrade.)
     if (schoolSlug) {
-      fetch('/copy/' + schoolSlug, { method: 'POST', keepalive: true })
-        .catch(function () {});
+      var copyKey = 'copied:' + schoolSlug;
+      var alreadyCounted = false;
+      try { alreadyCounted = localStorage.getItem(copyKey) === '1'; } catch (e) {}
+      if (!alreadyCounted) {
+        fetch('/copy/' + schoolSlug, { method: 'POST', keepalive: true })
+          .catch(function () {});
+        try { localStorage.setItem(copyKey, '1'); } catch (e) {}
+      }
     }
   });
 
