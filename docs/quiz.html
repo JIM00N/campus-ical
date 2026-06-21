@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7846416313017153"
+crossorigin="anonymous"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>나의 수강신청 유형 테스트 | 학사일정 구독</title>
+<meta name="description" content="60초 만에 알아보는 나의 수강신청 유형 테스트. 전략 사령관·광클의 신·F5 게릴라·안정 제일주의·공강 수집가·즉흥 방랑자 중 나는 누구일까요?">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="topbar"><a href="/" class="brand">학사일정 구독</a><nav class="topnav"><a href="/about.html">소개</a><a href="/blog/">업데이트 내역</a><a href="/faq.html">이용방법</a></nav></header>
+
+<main class="main quiz">
+<section class="quiz__intro" id="quizIntro">
+<h1 class="quiz__title">🎯 나의 수강신청 유형 테스트</h1>
+<p class="quiz__lead">수강신청은 학기 시작 전 가장 큰 이벤트죠. 6개 질문으로 나의 수강신청 스타일을 알아보세요. 약 60초면 끝나요.</p>
+<button type="button" class="quiz-btn" id="quizStart">테스트 시작하기</button>
+</section>
+
+<section class="quiz__play" id="quizPlay" hidden>
+<div class="quiz__progress"><span id="quizStep">1</span> / <span id="quizTotal">6</span></div>
+<div class="quiz__bar"><div class="quiz__bar-fill" id="quizBar"></div></div>
+<h2 class="quiz__q" id="quizQ"></h2>
+<div class="quiz__options" id="quizOptions"></div>
+</section>
+
+<section class="quiz__result" id="quizResult" hidden>
+<div class="quiz-result__emoji" id="rEmoji"></div>
+<p class="quiz-result__label">나의 수강신청 유형은</p>
+<h2 class="quiz-result__name" id="rName"></h2>
+<p class="quiz-result__tag" id="rTag"></p>
+<p class="quiz-result__desc" id="rDesc"></p>
+<div class="quiz-result__rec" id="rRec"></div>
+<div class="quiz__actions">
+<button type="button" class="quiz-btn js-quiz-share" id="quizShare">📤 결과 공유하기</button>
+<button type="button" class="quiz-btn quiz-btn--ghost" id="quizRetry">다시 하기</button>
+</div>
+<p class="quiz-result__cta"><a href="/">📅 우리 학교 수강신청·학사일정 캘린더 구독하러 가기 →</a></p>
+</section>
+</main>
+
+<footer class="footer">
+<p>학사일정은 각 학교 공식 사이트에서 매일 자동으로 동기화됩니다. 일정이 변경되면 캘린더에도 반영됩니다.</p>
+<p class="footer-links"><a href="/about.html">소개</a> · <a href="/sources.html">데이터 출처</a> · <a href="/guide/">구독 가이드</a> · <a href="/blog/">업데이트 내역</a> · <a href="/faq.html">이용방법</a> · <a href="/privacy.html">개인정보처리방침</a></p>
+<p class="footer-email">문의: jimoon4b@gmail.com</p>
+</footer>
+
+<script>
+(function () {
+  // 결과 유형 (점수 합산 후 최고점, 동점은 ORDER 우선순위로 결정)
+  var TYPES = {
+    strategist: { emoji: '🎯', name: '전략 사령관', tag: '장바구니부터 대체과목까지, 완벽한 작전',
+      desc: '수강신청은 곧 전쟁. 장바구니·1·2·3지망·대체과목까지 미리 짜두고 서버 시간까지 맞춥니다. 계획대로 됐을 때의 쾌감을 압니다.',
+      rec: { href: '/blog/course-vs-edit.html', text: '수강신청 vs 수강정정 전략 보기' } },
+    clicker: { emoji: '⚡', name: '광클의 신', tag: '0.1초의 승부사',
+      desc: '계획보다 손이 먼저 나갑니다. 클릭 타이밍 하나로 인기 과목을 잡아내는 반응속도의 소유자. 다만 가끔 엉뚱한 과목을 잡기도 하죠.',
+      rec: { href: '/blog/course-registration.html', text: '수강신청 망하지 않는 법' } },
+    guerrilla: { emoji: '🔄', name: 'F5 게릴라', tag: '정정 기간의 사냥꾼',
+      desc: '본 수강신청에서 못 잡아도 당황하지 않습니다. 정정 기간 빈자리를 새로고침으로 노리는 끈기의 소유자. 결국 원하는 시간표를 완성하고야 맙니다.',
+      rec: { href: '/blog/course-vs-edit.html', text: '수강정정 기간 활용법' } },
+    safe: { emoji: '🛡️', name: '안정 제일주의', tag: '학점과 평화를 사수한다',
+      desc: '무리한 빡센 과목보다 학점 잘 주는 안전한 과목 위주. 욕심내다 망하느니 확실하게. 평점 관리의 달인입니다.',
+      rec: { href: '/blog/gpa.html', text: '학점(GPA) 올리는 법' } },
+    gap: { emoji: '☕', name: '공강 수집가', tag: '시간표도 미학이다',
+      desc: '1교시·연강은 사절. 요일 배치와 공강 확보가 과목 선택보다 중요합니다. 비는 시간이 곧 대학 생활의 여유라고 믿습니다.',
+      rec: { href: '/blog/free-period.html', text: '공강 200% 활용법' } },
+    free: { emoji: '🍃', name: '즉흥 방랑자', tag: '되는 대로, 그게 또 낭만',
+      desc: '계획? 그런 거 없습니다. 일단 들어가서 잡히는 대로. 가끔 꼬여도 "어떻게든 되겠지"의 정신으로 학기를 살아갑니다.',
+      rec: { href: '/blog/time-management.html', text: '대학생 시간관리' } }
+  };
+  var ORDER = ['strategist', 'clicker', 'guerrilla', 'safe', 'gap', 'free'];
+
+  var QUESTIONS = [
+    { q: '수강신청 며칠 전, 나는?', opts: [
+      { t: '장바구니 담고 1·2·3지망 + 대체과목까지 정리한다', s: { strategist: 2 } },
+      { t: '학점 잘 주는 ‘꿀강’부터 검색한다', s: { safe: 2 } },
+      { t: '공강 만들 수 있게 요일 배치부터 고민한다', s: { gap: 2 } },
+      { t: '딱히 준비 안 함. 그날 가서 보지 뭐', s: { free: 2 } }
+    ]},
+    { q: '수강신청 당일 D-0, 시작 직전:', opts: [
+      { t: '서버 시간 맞추고 손가락 푼다', s: { clicker: 2, strategist: 1 } },
+      { t: '알람 맞췄는데… 일단 접속은 했다', s: { guerrilla: 2, free: 1 } },
+      { t: '인기 과목은 포기, 안 밀리는 것 위주', s: { safe: 2 } }
+    ]},
+    { q: '1지망 과목이 이미 마감됐다!', opts: [
+      { t: '정정 기간 노린다. 빈자리는 반드시 나온다', s: { guerrilla: 2 } },
+      { t: '바로 2지망으로. 미리 정해뒀다', s: { strategist: 2 } },
+      { t: '어차피 빡센 과목, 잘 됐다', s: { safe: 2 } },
+      { t: '비슷한 거 아무거나 잡는다', s: { free: 2 } }
+    ]},
+    { q: '나에게 이상적인 시간표는?', opts: [
+      { t: '주 3일 몰아넣고 4일 쉰다', s: { gap: 2 } },
+      { t: '전공 위주로 꽉꽉 채운다', s: { strategist: 2 } },
+      { t: '매일 1~2개씩 균형 있게', s: { safe: 2 } },
+      { t: '1교시만 아니면 다 좋다', s: { gap: 1, free: 1 } }
+    ]},
+    { q: '친구가 “이 수업 같이 듣자”고 하면?', opts: [
+      { t: '시간표 꼬여도 우정이지', s: { free: 2 } },
+      { t: '내 계획이 우선, 미안', s: { strategist: 2 } },
+      { t: '꿀강이면 콜', s: { safe: 2 } },
+      { t: '공강만 안 깨지면 콜', s: { gap: 2 } }
+    ]},
+    { q: '수강신청이 끝난 직후 내 상태는?', opts: [
+      { t: '0.2초 차이로 잡았다, 짜릿!', s: { clicker: 2 } },
+      { t: '정정 때 마저 채우면 되지', s: { guerrilla: 2 } },
+      { t: '계획대로 완벽하게 끝, 만족', s: { strategist: 2 } },
+      { t: '뭐… 어떻게든 되겠지', s: { free: 2 } }
+    ]}
+  ];
+
+  var intro = document.getElementById('quizIntro');
+  var play = document.getElementById('quizPlay');
+  var resultEl = document.getElementById('quizResult');
+  var qEl = document.getElementById('quizQ');
+  var optsEl = document.getElementById('quizOptions');
+  var stepEl = document.getElementById('quizStep');
+  var barEl = document.getElementById('quizBar');
+  document.getElementById('quizTotal').textContent = QUESTIONS.length;
+
+  var idx = 0;
+  var scores = {};
+
+  function show(el) { intro.hidden = el !== intro; play.hidden = el !== play; resultEl.hidden = el !== resultEl; }
+
+  function start() {
+    idx = 0; scores = {};
+    ORDER.forEach(function (k) { scores[k] = 0; });
+    show(play);
+    renderQ();
+    play.scrollIntoView({ block: 'start' });
+  }
+
+  function renderQ() {
+    var item = QUESTIONS[idx];
+    stepEl.textContent = idx + 1;
+    barEl.style.width = Math.round((idx / QUESTIONS.length) * 100) + '%';
+    qEl.textContent = item.q;
+    optsEl.innerHTML = '';
+    item.opts.forEach(function (o) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'quiz-opt';
+      b.textContent = o.t;
+      b.addEventListener('click', function () { choose(o); });
+      optsEl.appendChild(b);
+    });
+  }
+
+  function choose(o) {
+    for (var k in o.s) { if (o.s.hasOwnProperty(k)) scores[k] += o.s[k]; }
+    idx++;
+    if (idx < QUESTIONS.length) { renderQ(); play.scrollIntoView({ block: 'start' }); }
+    else finish();
+  }
+
+  function winner() {
+    var best = ORDER[0];
+    for (var i = 1; i < ORDER.length; i++) {
+      if (scores[ORDER[i]] > scores[best]) best = ORDER[i];
+    }
+    return best;
+  }
+
+  function renderResult(key) {
+    var t = TYPES[key];
+    if (!t) return;
+    document.getElementById('rEmoji').textContent = t.emoji;
+    document.getElementById('rName').textContent = t.name;
+    document.getElementById('rTag').textContent = '“' + t.tag + '”';
+    document.getElementById('rDesc').textContent = t.desc;
+    document.getElementById('rRec').innerHTML =
+      '추천 글 · <a href="' + t.rec.href + '">' + t.rec.text + '</a>';
+    resultEl.setAttribute('data-type', key);
+    show(resultEl);
+  }
+
+  function finish() {
+    var key = winner();
+    try { history.replaceState(null, '', '?type=' + key); } catch (e) {}
+    renderResult(key);
+    resultEl.scrollIntoView({ block: 'start' });
+  }
+
+  document.getElementById('quizStart').addEventListener('click', start);
+  document.getElementById('quizRetry').addEventListener('click', function () {
+    try { history.replaceState(null, '', location.pathname); } catch (e) {}
+    show(intro); intro.scrollIntoView({ block: 'start' });
+  });
+
+  // 공유 — 결과를 딥링크로. Web Share API 우선, 데스크톱은 클립보드 fallback.
+  document.getElementById('quizShare').addEventListener('click', function () {
+    var key = resultEl.getAttribute('data-type');
+    var t = TYPES[key] || {};
+    var url = location.origin + location.pathname + (key ? '?type=' + key : '');
+    var text = '나의 수강신청 유형: ' + (t.emoji || '') + ' ' + (t.name || '') + '! 너는?';
+    if (navigator.share) {
+      navigator.share({ title: '수강신청 유형 테스트', text: text, url: url }).catch(function () {});
+    } else if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text + ' ' + url).then(function () {
+        alert('결과 링크를 복사했어요. 카톡·SNS에 붙여넣어 공유해보세요!');
+      });
+    } else {
+      prompt('아래 링크를 복사하세요:', url);
+    }
+  });
+
+  // 딥링크(?type=)로 들어오면 결과부터 보여주고, 인트로 버튼은 ‘나도 해보기’로.
+  var m = location.search.match(/[?&]type=([a-z]+)/);
+  if (m && TYPES[m[1]]) {
+    renderResult(m[1]);
+  }
+})();
+</script>
+</body>
+</html>
