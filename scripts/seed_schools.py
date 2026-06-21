@@ -75,6 +75,24 @@ SCHOOLS = [
         "crawler_key": "dongguk",
         "timezone": "Asia/Seoul",
     },
+    {
+        "slug": "hongik",
+        "name": "홍익대학교",
+        "name_en": "Hongik University",
+        "logo_path": "/static/logos/hongik.svg",
+        "website": "https://www.hongik.ac.kr/kr/education/academic-schedule001.do",
+        "crawler_key": "hongik",
+        "timezone": "Asia/Seoul",
+    },
+    {
+        "slug": "ewha",
+        "name": "이화여자대학교",
+        "name_en": "Ewha Womans University",
+        "logo_path": "/static/logos/ewha.svg",
+        "website": "https://www.ewha.ac.kr/ewha/bachelor/calendar2026.do",
+        "crawler_key": "ewha",
+        "timezone": "Asia/Seoul",
+    },
 ]
 
 
