@@ -444,3 +444,21 @@ body {
 }
 .blog-news-card strong { font-size: 15px; color: #111827; line-height: 1.4; margin-top: 2px; }
 .blog-news-card__desc { font-size: 13px; color: #6b7280; line-height: 1.5; }
+
+/* ── 데이터 출처 표 (sources.html) ───────────────────────── */
+.source-table { width: 100%; border-collapse: collapse; margin: 8px 0 8px; }
+.source-table th {
+  text-align: left; font-size: 12px; color: #9ca3af; font-weight: 600;
+  padding: 0 8px 8px 0; border-bottom: 1px solid #e5e7eb;
+}
+.source-table td {
+  padding: 10px 8px 10px 0; border-bottom: 1px solid #f3f4f6;
+  font-size: 14px; color: #1f2937; vertical-align: top;
+}
+.source-table tr:last-child td { border-bottom: none; }
+.source-table td:first-child { white-space: nowrap; font-weight: 600; }
+.source-table a { color: #2563eb; }
+
+/* ── 블로그 글 작성자 메타 (article 헤더) ───────────────────────── */
+.article__byline { font-size: 13px; color: #9ca3af; margin: 0 0 20px; }
+.article__byline strong { color: #4b5563; font-weight: 600; }
