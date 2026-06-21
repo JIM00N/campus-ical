@@ -435,7 +435,7 @@ body {
 .article__back a:hover { color: #2563eb; }
 .article__title { font-size: 26px; line-height: 1.35; margin: 0 0 6px; color: #111827; }
 .article__date { display: block; font-size: 13px; color: #9ca3af; margin-bottom: 24px; font-variant-numeric: tabular-nums; }
-.article p:not(.article__back):not(.article__cta) { color: #374151; line-height: 1.8; margin: 0 0 16px; }
+.article p:not(.article__back):not(.article__cta):not(.article__byline) { color: #374151; line-height: 1.8; margin: 0 0 16px; }
 .article h2 { font-size: 19px; margin: 28px 0 10px; color: #111827; }
 .article__cta {
   margin-top: 32px; padding: 18px 20px; text-align: center;
@@ -482,3 +482,13 @@ body {
 /* ── 블로그 글 작성자 메타 (article 헤더) ───────────────────────── */
 .article__byline { font-size: 13px; color: #9ca3af; margin: 0 0 20px; }
 .article__byline strong { color: #4b5563; font-weight: 600; }
+
+/* ── 글 하단 관련 글 (내부 링크) ───────────────────────── */
+.article__related {
+  margin-top: 36px; padding-top: 20px; border-top: 1px solid #e5e7eb;
+}
+.article__related h2 { font-size: 16px; margin: 0 0 12px; color: #111827; }
+.article__related ul { margin: 0; padding-left: 20px; }
+.article__related li { margin-bottom: 8px; line-height: 1.6; }
+.article__related a { color: #2563eb; text-decoration: none; }
+.article__related a:hover { text-decoration: underline; }
