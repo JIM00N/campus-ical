@@ -7,5 +7,7 @@ from app.crawlers import korea  # noqa: F401  register on import
 from app.crawlers import knsu  # noqa: F401  register on import
 from app.crawlers import hallym  # noqa: F401  register on import
 from app.crawlers import dongguk  # noqa: F401  register on import
+from app.crawlers import hongik  # noqa: F401  register on import
+from app.crawlers import ewha  # noqa: F401  register on import
 
 __all__ = ["BaseCrawler", "RawEvent", "get_crawler", "register_crawler"]
