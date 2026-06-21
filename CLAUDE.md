@@ -75,6 +75,7 @@
 PR 머지는 Supabase **preview branch**만 갱신하고, 운영엔 아무것도 자동 배포되지 않는다 (배포 CI 없음). Edge Function 코드·`supabase/migrations/`·`docs/`·`worker/`를 건드린 PR은 **머지 후 아래를 직접 실행**해야 반영됨:
 
 - **Cloudflare (프론트 `docs/` + 워커 `worker/`)**: repo root에서 `npx wrangler deploy` (`wrangler login` 필요 — Worker+Static Assets 한 번에 배포)
+  - ★ 학교 페이지의 **정적 학사일정 표**(SEO/AdSense용)는 라이브 `.ics` 스냅샷이라 자동 갱신 안 됨. deploy 전 `python -m scripts.build_school_pages` 실행 → `git diff docs/s/` 검토·커밋 → `npx wrangler deploy`. (생성기가 6개 학교 `docs/s/*.html` 의 `<!-- SCHEDULE:START/END -->` 사이를 교체. dongguk은 피드 미생성으로 skip. mac mini cron 자동화는 후속 과제)
 - **Supabase Edge Function `web`**: `supabase functions deploy web --project-ref rhjovcmtvzhqublrqxic` (CLI는 access token으로 이미 인증됨, `link` 불필요)
 - **운영 마이그레이션**: 대시보드 SQL Editor에 마이그레이션 SQL 실행이 가장 빠름 (운영 DB 비번은 mac mini `ops/mac-cron/.env`에만 있고 repo `.env`는 localhost). 또는 Session pooler URL로 `supabase db push --db-url …`
 

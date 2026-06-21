@@ -335,6 +335,26 @@ body {
 }
 .upcoming__date { flex-shrink: 0; font-size: 13px; color: #9ca3af; }
 
+/* ── 정적 학사일정 표 (scripts/build_school_pages.py 가 주입) ─────── */
+.schedule { text-align: left; margin-top: 28px; }
+.schedule__title { font-size: 18px; margin: 0 0 10px; color: #111827; }
+.schedule__intro { font-size: 13px; color: #4b5563; line-height: 1.7; margin: 0 0 16px; }
+.schedule__table { width: 100%; border-collapse: collapse; }
+.schedule__table th {
+  text-align: left; font-size: 12px; color: #9ca3af; font-weight: 600;
+  padding: 0 8px 8px 0; border-bottom: 1px solid #e5e7eb;
+}
+.schedule__table td {
+  padding: 8px 8px 8px 0; border-bottom: 1px solid #f3f4f6;
+  font-size: 13px; color: #1f2937; vertical-align: top;
+}
+.schedule__table tr:last-child td { border-bottom: none; }
+.schedule__table .schedule__date { white-space: nowrap; color: #4b5563; font-variant-numeric: tabular-nums; }
+.schedule__table .schedule__name { font-weight: 500; }
+.schedule__table .schedule__cat { white-space: nowrap; color: #2563eb; font-size: 12px; }
+.schedule__source { font-size: 12px; color: #9ca3af; margin: 14px 0 0; }
+.schedule__source a { color: #2563eb; }
+
 /* ── 강화된 캘린더 등록 가이드 ───────────────────────── */
 .how { text-align: left; margin-top: 24px; }
 .how__title { font-size: 16px; margin: 0 0 12px; color: #111827; }
